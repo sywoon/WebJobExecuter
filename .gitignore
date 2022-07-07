@@ -1,0 +1,17 @@
+
+# folder
+tools/lua5.3/
+.vscode
+node_modules
+log/
+__png8__cache__
+
+
+# files
+http_client/*.js
+
+node_server/*.js
+!node_server/node_main.js
+
+
+
