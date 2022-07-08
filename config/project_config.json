@@ -1,0 +1,49 @@
+{
+    "projRootPath" : "../",
+    "commonCfg" : {
+        "clientProjName" : "shj_client_git",
+        "uiProjName" : "shj_uiedit_git",
+        "clientBackup" : [
+            "src/ui/layaMaxUI.ts",
+
+            "bin/res/db/data1.json",
+            "bin/res/db/data2.json",
+            "bin/res/db/data3.json",
+            "bin/res/db/data4.json",
+            "bin/res/db/data5.json",
+            "bin/res/db/data6.json",
+            "bin/res/db/data7.json",
+            "bin/res/db/data8.json",
+            "bin/res/db/heads.json",
+            "libs/Data.d.ts",
+
+            "bin/libs/proto.js",
+            "libs/proto.d.ts",
+            "bin/res/error_msg.json"
+        ],
+        "nodeServer" : {
+            "ip" : "192.168.30.40",
+            "port" : 9001
+        }
+    },
+    "projects" : [
+        {
+            "name" : "master",
+            "path" : "shj-master",
+            "gitBranch" : "master",
+            "httpPath" : "/shj-master/shj_client_git/bin/index.html"
+        },
+        {
+            "name" : "release",
+            "path" : "shj-release",
+            "gitBranch" : "release",
+            "httpPath" : "/shj-release/shj_client_git/bin/index_debug.html"
+        },
+        {
+            "name" : "qpbt",
+            "path" : "shj-qpbt1",
+            "gitBranch" : "qpbt",
+            "httpPath" : "/shj-qpbt1/shj_client_git/bin/index.html"
+        }
+    ]
+}
