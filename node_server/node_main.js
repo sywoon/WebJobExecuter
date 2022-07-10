@@ -1,9 +1,9 @@
 const process = require ("process")
-const Utils = require ("./utils")
-const NodeServer = require ("./node_server")
-const ToolsConfig = require ("./tools_config")
-const ResponseOperator = require ("./response_operator")
-const PluginMgr = require("./plugin_mgr")
+const Utils = require ("./framework/utils")
+const NodeServer = require ("./framework/node_server")
+const ToolsConfig = require ("./framework/tools_config")
+const ResponseOperator = require ("./framework/response_operator")
+const PluginMgr = require("./framework/plugin_mgr")
 
 
 
@@ -11,7 +11,7 @@ function main(toolPath, rootPath) {
     toolPath = Utils.fixPath(toolPath, true)
     rootPath = Utils.fixPath(rootPath, true)
 
-    let toolsConfig = new ToolsConfig(rootPath);
+    let toolsConfig = new ToolsConfig(rootPath)
     let cfgServer = toolsConfig.getConfig("node_server")
 
     let pluginMgr = new PluginMgr()
@@ -23,8 +23,9 @@ function main(toolPath, rootPath) {
     nodeSvr.startServer(cfgServer.ip, cfgServer.port)
 }
 
-const args = process.argv.slice(2);
-let toolPath = args[0];
-let rootPath = args[1];
-main(toolPath, rootPath);
+const args = process.argv.slice(2)
+let toolPath = args[0]
+let rootPath = args[1]
+main(toolPath, rootPath)
+
 
