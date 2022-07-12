@@ -2,6 +2,7 @@ const JobGroup = require("../framework/jobs/job_group")
 const JobProjectStatus = require("./jobs/job_projectstatus")
 const JobProjectVersion = require("./jobs/job_projectversion")
 const JobUpdateClient = require("./jobs/job_updateclient")
+const PM = require("../framework/plugin_mgr")
 
 
 let CMD_CODE = {
@@ -32,33 +33,22 @@ class Logic {
     }
 
     registerAll() {
-        this._registerCmdJobs()
-        this._registerStatusJobs()
-        this._registerFileJobs()
+        let PLUGIN_TYPE = PM.PLUGIN_TYPE
+        this._registerTypeJobs(PLUGIN_TYPE.CMD, CMD_JOBGROUP)
+        this._registerTypeJobs(PLUGIN_TYPE.STATUS, STATUS_JOBGROUP)
+        this._registerTypeJobs(PLUGIN_TYPE.FILE, FILE_JOBGROUP)
     }
 
-    _registerCmdJobs() {
-        for (let cmd in CMD_JOBGROUP) {
+    _registerTypeJobs(type, groups) {
+        for (let key in groups) {
             let group = new JobGroup()
-            for (let cls of CMD_JOBGROUP[cmd]) {
+            for (let cls of groups[key]) {
                 group.addJob(new cls())
             }
-            this.pluginMgr.registerCmdJobGroup(cmd, group)
-        }
-    }
-
-    _registerStatusJobs() {
-        for (let key in STATUS_JOBGROUP) {
-            this.pluginMgr.registerStatusJobGroup(key, group)
-        }
-    }
-
-    _registerFileJobs() {
-        for (let key in FILE_JOBGROUP) {
-            this.pluginMgr.registerFileJobGroup(key, group)
+            this.pluginMgr.registerJobGroup(type, key, group)
         }
     }
 }
 
 
-module['exports'] = Logic
+module["exports"] = Logic

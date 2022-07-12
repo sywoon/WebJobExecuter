@@ -3,7 +3,8 @@ const Utils = require ("./framework/utils")
 const NodeServer = require ("./framework/node_server")
 const ToolsConfig = require ("./framework/tools_config")
 const ResponseOperator = require ("./framework/response_operator")
-const PluginMgr = require("./framework/plugin_mgr")
+const PM = require("./framework/plugin_mgr")
+const Logic = require("./logic/logic")
 
 
 
@@ -14,7 +15,7 @@ function main(toolPath, rootPath) {
     let toolsConfig = new ToolsConfig(rootPath)
     let cfgServer = toolsConfig.getConfig("node_server")
 
-    let pluginMgr = new PluginMgr()
+    let pluginMgr = new PM.PluginMgr()
     pluginMgr.registerPlugins()
 
     let nodeSvr = new NodeServer()

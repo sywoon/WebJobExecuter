@@ -30,6 +30,10 @@ class PluginMgr {
         }
     }
 
+    registerJobGroup(type, cmd, group) {
+        this.plugins[type].registerJobGroup(cmd, group)
+    }
+
     registerCmdJobGroup(cmd, group) {
         this.plugins[PLUGIN_TYPE.CMD].registerJobGroup(cmd, group)
     }
@@ -64,4 +68,4 @@ class PluginMgr {
 
 
 
-module['exports'] = PluginMgr
+module['exports'] = { PluginMgr, PLUGIN_TYPE }
