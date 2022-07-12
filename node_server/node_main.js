@@ -21,6 +21,9 @@ function main(toolPath, rootPath) {
     let resOperator = new ResponseOperator(nodeSvr, pluginMgr)
     nodeSvr.setDealDataCall(resOperator.onReceiveClientData.bind(resOperator))
     nodeSvr.startServer(cfgServer.ip, cfgServer.port)
+
+    let logic = new Logic(pluginMgr)
+    logic.registerAll()
 }
 
 const args = process.argv.slice(2)

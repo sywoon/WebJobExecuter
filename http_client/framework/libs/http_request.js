@@ -1,4 +1,4 @@
-(function() {
+(function(exports) {
     var debug = true;
 
     function HttpRequest() {
@@ -91,5 +91,5 @@
         this.cbk && this.cbk("complete", data);
     }
 
-    window.HttpRequest = HttpRequest;
-})();
+    exports.HttpRequest = HttpRequest;
+})(window);

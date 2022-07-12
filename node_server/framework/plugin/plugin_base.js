@@ -1,6 +1,15 @@
 
 class PluginBase {
-    dealData(data, responseBack) {}
+    constructor(mgr) {
+        this.mgr = mgr
+        this.jobGroup = {}
+    }
+
+    registerJobGroup(key, group) {
+        this.jobGroup[key] = group
+    }
+
+    dealData(data, result) {}
 }
 
 

@@ -25,9 +25,21 @@ class PluginMgr {
     registerPlugins() {
         assert(this.plugins.length == 0)
         for (let type in PluginConfig) {
-            let plugin = new PluginConfig[type]
+            let plugin = new PluginConfig[type](this)
             this.plugins[type] = plugin
         }
+    }
+
+    registerCmdJobGroup(cmd, group) {
+        this.plugins[PLUGIN_TYPE.CMD].registerJobGroup(cmd, group)
+    }
+
+    registerStatusJobGroup(key, group) {
+        this.plugins[PLUGIN_TYPE.STATUS].registerJobGroup(key, group)
+    }
+
+    registerFileJobGroup(key, group) {
+        this.plugins[PLUGIN_TYPE.FILE].registerJobGroup(key, group)
     }
 
     // {plugin_type:number, data:{...}}
@@ -42,7 +54,10 @@ class PluginMgr {
             console.error("plugin not found:" + data.plugin_type)
             return
         }
-        plugin.dealData(data.data, responseBack)
+
+        let result = {code:0, data:{}, msg:""}
+        plugin.dealData(data.data, result)
+        responseBack(result.code, result.data, result.msg)
     }
 }
 

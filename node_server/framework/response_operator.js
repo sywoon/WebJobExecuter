@@ -10,6 +10,7 @@ class ResponseOperator {
             this.nodeSvr.responseBack(response, code, data, msg)
         }
 
+        //数据约定: {plugin_type:number, data:{...}}
         let data
         try {
             data = JSON.parse(buffer)
