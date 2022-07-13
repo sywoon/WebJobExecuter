@@ -5,6 +5,7 @@ const ToolsConfig = require ("./framework/tools_config")
 const ResponseOperator = require ("./framework/response_operator")
 const PM = require("./framework/plugin_mgr")
 const Logic = require("./logic/logic")
+const Mgr = require("./framework/mgr")
 
 
 
@@ -15,15 +16,15 @@ function main(toolPath, rootPath) {
     let toolsConfig = new ToolsConfig(rootPath)
     let cfgServer = toolsConfig.getConfig("node_server")
 
-    let pluginMgr = new PM.PluginMgr()
-    pluginMgr.registerPlugins()
+    let mgr = new Mgr()
+    mgr.initAll()
 
     let nodeSvr = new NodeServer()
-    let resOperator = new ResponseOperator(nodeSvr, pluginMgr)
+    let resOperator = new ResponseOperator(nodeSvr, mgr)
     nodeSvr.setDealDataCall(resOperator.onReceiveClientData.bind(resOperator))
     nodeSvr.startServer(cfgServer.ip, cfgServer.port)
 
-    let logic = new Logic(pluginMgr)
+    let logic = new Logic(mgr)
     logic.registerAll()
 }
 

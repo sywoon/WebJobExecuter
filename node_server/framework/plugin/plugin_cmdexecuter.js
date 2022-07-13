@@ -1,17 +1,14 @@
-const PluginBase = require("./plugin_base");
+const PluginBase = require("./plugin_base")
+const Define = require ("./../../define")
 
-let CMD_ERROR = {
-    "BUSY" : -1,
-    "CMD_LOST" : -2,
-    "UNKNOW" : -100,
-}
+let CMD_ERROR = Define.CMD_ERROR
 
 
 // 命名执行器：和客户端交互具体的业务逻辑
 // 一次执行一个 用于消耗比较大的任务
 class PluginCmdExecuter extends PluginBase {
-    constructor(mgr) {
-        super(mgr)
+    constructor(type, mgr) {
+        super(type, mgr)
         this.inprocess = false
     }
 
@@ -22,13 +19,7 @@ class PluginCmdExecuter extends PluginBase {
             return
         }
 
-        let group = this.jobGroup[data.cmd]
-        if (!group) {
-            result.code = CMD_ERROR.CMD_LOST
-            return
-        }
-
-        this.jobGroup.dealData(data, result, ()=> {
+        super.dealData(data, result, ()=> {
             this.inprocess = false
         })
     }

@@ -1,6 +1,7 @@
 
 class JobBase {
-    dealData(data, result, cbk) {}
+    dealData(data, result) {}
+    dealDataAsync(data, result, cbk) {}
 }
 
 

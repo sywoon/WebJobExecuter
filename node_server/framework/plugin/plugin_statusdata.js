@@ -7,10 +7,9 @@ const PluginBase = require("./plugin_base");
 class PluginStatusData extends PluginBase {
 
     dealData(data, result) {
-        this.jobGroup.dealData(data, result)
+        super.dealData(data, result)
     }
 }
-
 
 
 

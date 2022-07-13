@@ -55,7 +55,7 @@ class NodeServer {
                 if (that._dealDataCall) {
                     that._dealDataCall(response, buffer)
                 } else {
-                    that.responseBack(0, null, "nobody deal data")
+                    that.responseBack(response, -1, {msg:"nobody deal data"})
                 }
             })
         })
@@ -65,8 +65,11 @@ class NodeServer {
         })
     }
 
-    responseBack(response, code, data, msg) {
-        let o = {code:code, data:data, msg:msg}
+    // error:系统级  0正常 -1:数据未获得正确处理
+    // code:业务级
+    // result: {plugin_type:number, cmd:string|number, code:0, data:{...}, msg:""}
+    responseBack(response, error, result) {
+        let o = {error:error, result}
         let str = JSON.stringify(o)
 
         response.writeHead(200, HEAD)  //501:not implemented

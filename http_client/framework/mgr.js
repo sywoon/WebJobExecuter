@@ -8,7 +8,8 @@
             this.toolsCfg = new ToolsConfig(syncLoaded.cbkListener.bind(syncLoaded, "toolsCfg"))
 
             let pluginMgr = new PluginMgr()
-            this.pluginMgr = pluginMgr
+            pluginMgr.registerPlugins()
+            this.plugin = pluginMgr
         }
     }
 

@@ -1,9 +1,10 @@
 
 class JobGroup {
-    constructor() {
+    constructor(cmd, pluginType, isAync) {
         this.jobs = []
         this.jobIdx = 0
         this.endCbk = null
+        this.isAync = isAync
     }
 
     addJob(job) {
@@ -11,9 +12,15 @@ class JobGroup {
     }
 
     dealData(data, result, endCbk) {
-        this.jobIdx = 0
-        this.endCbk = endCbk
-        this.nextJob(data, result)
+        if (this.isAync) {
+            this.jobIdx = 0
+            this.endCbk = endCbk
+            this.nextJob(data, result) 
+        } else {
+            for (let job of this.jobs) {
+                job.dealData(data, result)
+            }
+        }
     }
 
     nextJob(data, result) {
@@ -23,7 +30,9 @@ class JobGroup {
         }
 
         let job = this.jobs[this.jobIdx]
-        job.dealData(data, result, this.nextJob.bind(this, data, result))
+        //异步任务 result将由第一个job决定
+        job.dealDataAsync(data, this.jobIdx== 0?result:null, this.nextJob.bind(this, data, result))
+        this.jobIdx++;
     }
 }
 

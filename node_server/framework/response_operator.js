@@ -1,8 +1,8 @@
 
 class ResponseOperator {
-    constructor(nodeSvr, pluginMgr) {
+    constructor(nodeSvr, mgr) {
         this.nodeSvr = nodeSvr
-        this.pluginMgr = pluginMgr
+        this.mgr = mgr
     }
 
     onReceiveClientData(response, buffer) {
@@ -10,15 +10,15 @@ class ResponseOperator {
             this.nodeSvr.responseBack(response, code, data, msg)
         }
 
-        //数据约定: {plugin_type:number, data:{...}}
+        //{plugin_type:number, cmd:string|number, data:{...}}
         let data
         try {
             data = JSON.parse(buffer)
-            this.pluginMgr.dealResponseData(data, responseBack)
+            this.mgr.plugin.dealResponseData(data, responseBack)
         } catch (error) {
             let msg = "error! json data parse error:" + data
             console.error(msg)
-            responseBack(-1, null, msg)
+            responseBack(-1, 0, null, msg)
             return
         }
     }

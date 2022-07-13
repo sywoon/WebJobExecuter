@@ -1,12 +1,5 @@
 (function(exports) {
     
-    let PLUGIN_TYPE = {
-        "FILE" : 1,
-        "CMD" : 2,
-        "STATUS" : 3,
-    }
-
-        
     let PluginConfig = {
         [PLUGIN_TYPE.FILE] : PluginFileContent,
         [PLUGIN_TYPE.CMD] : PluginCmdExecuter,
@@ -21,23 +14,31 @@
         }
 
         registerPlugins() {
-            assert(this.plugins.length == 0)
+            console.assert(this.plugins.length == 0)
             for (let type in PluginConfig) {
-                let plugin = new PluginConfig[type](this)
+                let plugin = new PluginConfig[type](type, this)
                 this.plugins[type] = plugin
             }
+        }
+
+        registerJobSender(type, key, sender) {
+            this.plugins[type].registerJobSender(key, sender)
+        }
+
+        getPlugin(type) {
+            return this.plugins[type]
         }
 
         setServerSendCall(call) {
             this.serverSendCall = call
         }
 
-        // {plugin_type:number, data:{...}}
+        // {plugin_type:number, cmd:string|number, data:{...}}
         sendServerCmd(data) {
             this.serverSendCall && this.serverSendCall(data)
         }
 
-        // {plugin_type:number, data:{...}}
+        //data: {plugin_type:number, cmd:string|number, code:0, data:{...}, msg:""}
         dealResponseData(data) {
             if (!data || !data.plugin_type) {
                 console.error("data is null")
@@ -49,10 +50,9 @@
                 console.error("plugin not found:" + data.plugin_type)
                 return
             }
-            plugin.dealData(data.data, responseBack)
+            plugin.dealData(data)
         }
     }
 
-    exports.PLUGIN_TYPE = PLUGIN_TYPE
     exports.PluginMgr = PluginMgr
 })(window)

@@ -1,6 +1,12 @@
+const logger = require ("./../libs/logger")
+const Define = require ("./../../define")
+
+
+let CMD_ERROR = Define.CMD_ERROR
 
 class PluginBase {
-    constructor(mgr) {
+    constructor(type, mgr) {
+        this.type = type
         this.mgr = mgr
         this.jobGroup = {}
     }
@@ -9,7 +15,17 @@ class PluginBase {
         this.jobGroup[key] = group
     }
 
-    dealData(data, result) {}
+    // {plugin_type:number, cmd:string|number, data:{...}}
+    dealData(data, result, cbk) {
+        let group = this.jobGroup[data.cmd]
+        if (!group) {
+            result.code = CMD_ERROR.CMD_LOST
+            logger.error("group not found", data)
+            return
+        }
+
+        group.dealData(data.data, result, cbk)
+    }
 }
 
 

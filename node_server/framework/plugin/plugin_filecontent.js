@@ -4,7 +4,7 @@ const PluginBase = require("./plugin_base");
 class PluginFileContent extends PluginBase {
 
     dealData(data, result) {
-        this.jobGroup.dealData(data, result)
+        super.dealData(data, result)
     }
 }
 

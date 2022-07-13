@@ -20,6 +20,18 @@ function log(...msgs) {
     //fs.writeFileSync("../node_log.txt", msg)
 }
 
+function warn(...msgs) {
+    let msg = msgs.join("")
+    console.warn(msg)
+    fs.appendFileSync(logFile, msg, {encodeing:"binary"})
+}
+
+function error(...msgs) {
+    let msg = msgs.join("")
+    console.error(msg)
+    fs.appendFileSync(logFile, msg, {encodeing:"binary"})
+}
+
 function logcmd(msgs) {
     let msg = msgs.join("")
     // msg = Utils.cmd2u(msg)
@@ -27,4 +39,4 @@ function logcmd(msgs) {
 }
 
 
-module['exports'] = {log, logcmd, setLogPath}
+module['exports'] = {log, warn, error, logcmd, setLogPath}

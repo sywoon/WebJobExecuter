@@ -2,50 +2,50 @@ const JobGroup = require("../framework/jobs/job_group")
 const JobProjectStatus = require("./jobs/job_projectstatus")
 const JobProjectVersion = require("./jobs/job_projectversion")
 const JobUpdateClient = require("./jobs/job_updateclient")
-const PM = require("../framework/plugin_mgr")
+const JobSyncArtRes = require("./jobs/job_syncartres")
+const EventDispatcher = require("../framework/libs/event_dispatcher")
+const Define = require("./../define")
 
-
+let PLUGIN_TYPE = Define.PLUGIN_TYPE
 let CMD_CODE = {
     UPDATE_CLIENT: 1,
-    UPDATE_PROGRESS: 2,
-    REQ_ALL_PROJECTS: 3,
-    SERVER_IS_BUSY: 4,
-    SYNC_ART_RES: 5, //同步美术资源
-
-    ERROR: 100,
+    SYNC_ART_RES: 2, //同步美术资源
 }
 
 let CMD_JOBGROUP = {
-    [CMD_CODE.UPDATE_CLIENT] : [JobUpdateClient]
+    [CMD_CODE.UPDATE_CLIENT] : [JobUpdateClient],
+    [CMD_CODE.SYNC_ART_RES] : [JobSyncArtRes],
 }
 
 let STATUS_JOBGROUP = {
-    ["project_status"] : [JobProjectStatus]
+    ["status_project_status"] : [JobProjectStatus],
+    ["status_all_projects"] : [JobProjectStatus],
 }
 
 let FILE_JOBGROUP = {
-    ["file_proj_version"] : [JobProjectVersion]
+    ["file_proj_version"] : [JobProjectVersion],
 }
 
-class Logic {
-    constructor(pluginMgr) {
-        this.pluginMgr = pluginMgr
+class Logic extends EventDispatcher {
+    constructor(mgr) {
+        super()
+        this.mgr = mgr
     }
 
     registerAll() {
-        let PLUGIN_TYPE = PM.PLUGIN_TYPE
-        this._registerTypeJobs(PLUGIN_TYPE.CMD, CMD_JOBGROUP)
-        this._registerTypeJobs(PLUGIN_TYPE.STATUS, STATUS_JOBGROUP)
-        this._registerTypeJobs(PLUGIN_TYPE.FILE, FILE_JOBGROUP)
+        this._registerTypeJobs(PLUGIN_TYPE.CMD, CMD_JOBGROUP, true)
+        this._registerTypeJobs(PLUGIN_TYPE.STATUS, STATUS_JOBGROUP, false)
+        this._registerTypeJobs(PLUGIN_TYPE.FILE, FILE_JOBGROUP, false)
     }
 
-    _registerTypeJobs(type, groups) {
+    _registerTypeJobs(type, groups, isAsync) {
+        let pluginMgr = this.mgr.plugin
         for (let key in groups) {
-            let group = new JobGroup()
+            let group = new JobGroup(key, type, isAsync)
             for (let cls of groups[key]) {
                 group.addJob(new cls())
             }
-            this.pluginMgr.registerJobGroup(type, key, group)
+            pluginMgr.registerJobGroup(type, key, group)
         }
     }
 }

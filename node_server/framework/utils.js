@@ -1,6 +1,6 @@
 // const iconvl = require('iconv-lite')
 const child_process = require('child_process')
-const logger = require ('./logger')
+const logger = require ('./libs/logger')
 
 class Utils {
 
