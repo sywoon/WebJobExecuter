@@ -7,6 +7,7 @@ const PluginBase = require("./plugin_base");
 class PluginStatusData extends PluginBase {
 
     dealData(data, result) {
+        console.log("PluginStatusData.dealData")
         super.dealData(data, result)
     }
 }

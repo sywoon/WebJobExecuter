@@ -20,6 +20,7 @@ class JobGroup {
             for (let job of this.jobs) {
                 job.dealData(data, result)
             }
+            endCbk && endCbk()
         }
     }
 

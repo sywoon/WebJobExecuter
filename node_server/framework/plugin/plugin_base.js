@@ -16,7 +16,8 @@ class PluginBase {
     }
 
     // {plugin_type:number, cmd:string|number, data:{...}}
-    dealData(data, result, cbk) {
+    dealData(data, result) {
+        console.log("PluginBase.dealData", data, result)
         let group = this.jobGroup[data.cmd]
         if (!group) {
             result.code = CMD_ERROR.CMD_LOST
@@ -24,7 +25,7 @@ class PluginBase {
             return
         }
 
-        group.dealData(data.data, result, cbk)
+        group.dealData(data.data, result)
     }
 }
 

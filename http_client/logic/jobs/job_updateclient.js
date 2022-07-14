@@ -3,7 +3,7 @@
     
     class JobUpdateClient extends JobBase {
         dealData(data) {
-            logger.log("JobUpdateClient", data)
+            console.log("JobUpdateClient", data)
         }
     }
 

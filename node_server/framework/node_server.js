@@ -25,9 +25,9 @@ class NodeServer {
         let server = http.createServer(function (request, response) {
             const {url, method, headers} = request
         
-            //console.log('\n收到请求:' + request.url, url, method, headers)
-            debug && console.log('\n请求地址:', request.socket.remoteAddress, request.socket.remotePort)
-            // console.log("[[request received: " + headers.host)
+            //console.log('\n收到请求:', url, method, headers)
+            debug && console.log(`\n收到请求 url:${url} ${method} host:${headers.host}`)
+            debug && console.log(`client ip:${request.socket.remoteAddress} port:${request.socket.remotePort}\n`)
         
             let buffer = ''
             request.on('error', (err) => {
@@ -47,7 +47,7 @@ class NodeServer {
         
             request.on('end', function () {
                 //{"cmd":1,"data":{"data":1,"msg":"update_excel"}}
-                debug && console.log("request received data:" + buffer)
+                debug && console.log("request received data:" + buffer, typeof(buffer))
                 response.setHeader('Access-Control-Allow-Origin', '*')
                 response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
                 response.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,X-Access-Token,XKey,Authorization')

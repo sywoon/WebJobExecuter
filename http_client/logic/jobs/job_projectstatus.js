@@ -2,7 +2,7 @@
     
     class JobProjectStatus extends JobBase {
         dealData(data) {
-            logger.log("JobProjectStatus", data)
+            console.log("JobProjectStatus", data)
         }
     }
 

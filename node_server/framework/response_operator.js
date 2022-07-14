@@ -14,13 +14,14 @@ class ResponseOperator {
         let data
         try {
             data = JSON.parse(buffer)
-            this.mgr.plugin.dealResponseData(data, responseBack)
         } catch (error) {
-            let msg = "error! json data parse error:" + data
+            let msg = "error! json data parse error:" + buffer
             console.error(msg)
             responseBack(-1, 0, null, msg)
             return
         }
+
+        this.mgr.plugin.dealResponseData(data, responseBack)
     }
 }
 

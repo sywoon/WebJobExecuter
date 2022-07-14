@@ -39,7 +39,7 @@ class PluginMgr {
             return
         }
 
-        console.log("dealResponseData", data)
+        console.log("dealResponseData receive:", typeof(data), data)
         let plugin = this.plugins[data.plugin_type]
         if (!plugin) {
             console.error("plugin not found:" + data.plugin_type)
@@ -48,7 +48,7 @@ class PluginMgr {
 
         let result = {plugin_type:data.plugin_type, cmd:data.cmd, code:0, data:{}, msg:""}
         plugin.dealData(data, result)
-        console.log("dealResponseData", data, result)
+        console.log("dealResponseData response:", result)
         responseBack(0, result)
     }
 }

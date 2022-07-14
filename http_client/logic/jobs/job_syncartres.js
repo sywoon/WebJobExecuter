@@ -3,7 +3,7 @@
     
     class JobSyncArtRes extends JobBase {
         dealData(data) {
-            logger.log("JobSyncArtRes", data)
+            console.log("JobSyncArtRes", data)
         }
     }
 

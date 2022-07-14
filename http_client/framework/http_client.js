@@ -38,15 +38,14 @@
         //result: {plugin_type:number, cmd:string|number, code:0, data:{...}, msg:""}
         _onHttpResponse(type, data) {
             if (type == "onerror") {
-                console.error("load config failed tools_config.json")
                 this.inRequest = false
             } else if (type == "complete") {
                 console.log("load tools_config.json", data)
                 if (data.error == -1) {
                     console.error(data.result.msg)
                 } else {
-                    if (that.dealDataCall) {
-                        that.dealDataCall(data.result)
+                    if (this.dealDataCall) {
+                        this.dealDataCall(data.result)
                     } else {
                         console.log("nobody deal data", data)
                     }
