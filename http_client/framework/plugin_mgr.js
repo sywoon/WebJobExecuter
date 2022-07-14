@@ -45,6 +45,16 @@
                 return
             }
 
+            //通用错误 统一处理 
+            if (data.code == CMD_ERROR.COMMON) {
+                console.error(data.msg)
+                return
+            } else if (data.code == CMD_ERROR.BUSY) {
+                let copy = {plugin_type:data.plugin_type, cmd:data.cmd, data:data.plugin_type}
+                client.pushToQueue(copy)
+                return
+            }
+
             let plugin = this.plugins[data.plugin_type]
             if (!plugin) {
                 console.error("plugin not found:" + data.plugin_type)

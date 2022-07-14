@@ -1,6 +1,7 @@
 (function (exports){
-    class HttpClient {
+    class HttpClient extends EventDispatcher {
         constructor() {
+            super()
             let cfgNodeSvr = mgr.toolsCfg.getConfig("node_server")
             this.urlServer = `http://${cfgNodeSvr.ip}:${cfgNodeSvr.port}`
             this.urlWeb = Browser.getBaseUrl()
@@ -18,8 +19,27 @@
 
         //{plugin_type:number, cmd:string|number, data:{...}}
         send(data) {
-            this.cmdQueue.push(data)
+            console.log("[[send http]]", data)
+            this.pushToQueue(data)
             this._sendNext()
+        }
+
+        pushToQueue(data) {
+            this.cmdQueue.push(data)
+
+            if (this.cmdQueue.length > MAX_QUEUE_LEN) {
+                this.cmdQueue.splice(0, this.cmdQueue.length-MAX_QUEUE_LEN)
+            }
+
+            this.fire(EVT_HTTP_CLIENT.DATA_QUEUE_CHG, this.cmdQueue)
+        }
+
+        clearQueue() {
+            this.cmdQueue = []
+        }
+
+        getQueueInfo() {
+            return `当前队列数:${this.cmdQueue.length}`
         }
 
         _sendNext() {
@@ -40,7 +60,7 @@
             if (type == "onerror") {
                 this.inRequest = false
             } else if (type == "complete") {
-                console.log("load tools_config.json", data)
+                console.log("[[onHttpResponse]]", data)
                 if (data.error == -1) {
                     console.error(data.result.msg)
                 } else {

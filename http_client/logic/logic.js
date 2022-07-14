@@ -10,7 +10,7 @@
     }
     
     let FILE_JOBSENDER = {
-        ["file_proj_version"] : JobProjectVersion,
+        ["file_read_config"] : JobReadConfigFile,
     }
 
     class Logic extends EventDispatcher {
@@ -18,6 +18,32 @@
             super()
             this.datas = {}
             this.jobs = {}
+        }
+
+        startUpdateProStatus() {
+            this._onTimerProStatus()
+            // mgr.timer.loop(3000, this, this._onTimerProStatus)
+        }
+
+        stopUpdateProStatus() {
+            mgr.timer.clear(this, this._onTimerProStatus)
+        }
+
+        _onTimerProStatus() {
+            let cmd = "file_read_config"
+            let filename = "update_dynamic_status.json"
+            this.sendJobData(cmd, {filename:filename})
+
+            let key = `${cmd}_${filename}`
+            this.once(key, this, (data)=>{
+                let content = JSON.parse(data.data.content)
+                if (!content) {
+                    console.error("parse json failed")
+                    return
+                }
+
+                this.fire(EVT_HTTP_CLIENT.PROJECT_DYNAMIC_STATUS, content)
+            })
         }
 
         saveData(key, data) {
