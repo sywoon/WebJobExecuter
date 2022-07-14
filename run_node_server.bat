@@ -1,4 +1,5 @@
 @echo off
+cls
 set "title_name=node_server"
 
 $Host.UI.RawUI.WindowTitle = %title_name% 2>nul

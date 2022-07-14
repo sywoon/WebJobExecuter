@@ -1,10 +1,17 @@
 
 class JobGroup {
-    constructor(cmd, pluginType, isAync) {
+    constructor(mgr, cmd, pluginType, isAync) {
+        this.mgr = mgr
+        this.cmd = cmd
+        this.pluginType = pluginType
         this.jobs = []
         this.jobIdx = 0
         this.endCbk = null
         this.isAync = isAync
+    }
+
+    getPlugin() {
+        return this.mgr.plugin.getPlugin(this.pluginType)
     }
 
     addJob(job) {

@@ -34,7 +34,7 @@ class EventDispatcher {
         let arr = this._events[type]
         for (let i = arr.length-1; i >= 0; i--) {
             let event = arr[i]
-            if (event.equalTo(caller, method)) {
+            if (event && event.equalTo(caller, method)) {
                 event.recycle()
                 arr.splice(i, 1)
             }
@@ -49,7 +49,7 @@ class EventDispatcher {
             let arr = this._events[type]
             for (let i = arr.length-1; i >= 0; i--) {
                 let event = arr[i]
-                if (event.caller === caller) {
+                if (event && event.caller === caller) {
                     event.recycle()
                     arr.splice(i, 1)
                 }
@@ -62,7 +62,7 @@ class EventDispatcher {
                 let arr = this._events[t]
                 for (let i = arr.length-1; i >= 0; i--) {
                     let event = arr[i]
-                    if (event.caller === caller) {
+                    if (event && event.caller === caller) {
                         event.recycle()
                         arr.splice(i, 1)
                     }

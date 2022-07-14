@@ -8,7 +8,7 @@
 // pathname: "/http_client/index.html"
 // port: "9100"
 // protocol: "http:"
-            return window.location.host
+            return window.location.origin
         }
     }
 

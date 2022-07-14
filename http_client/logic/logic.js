@@ -20,30 +20,29 @@
             this.jobs = {}
         }
 
-        startUpdateProStatus() {
-            this._onTimerProStatus()
-            // mgr.timer.loop(3000, this, this._onTimerProStatus)
+        getJobSender(key) {
+            return this.jobs[key]
         }
 
-        stopUpdateProStatus() {
-            mgr.timer.clear(this, this._onTimerProStatus)
+        sendJobData(cmd, data) {
+            let job = this.getJobSender(cmd)
+            job.sendServerCmd(data)
         }
 
-        _onTimerProStatus() {
-            let cmd = "file_read_config"
-            let filename = "update_dynamic_status.json"
+        sendJobCmdFileData(cmd, filename, cbk) {
             this.sendJobData(cmd, {filename:filename})
 
-            let key = `${cmd}_${filename}`
-            this.once(key, this, (data)=>{
-                let content = JSON.parse(data.data.content)
-                if (!content) {
-                    console.error("parse json failed")
-                    return
-                }
+            if (cbk) {
+                let key = `${cmd}_${filename}`
+                this.once(key, null, cbk)
+            }
+        }
 
-                this.fire(EVT_HTTP_CLIENT.PROJECT_DYNAMIC_STATUS, content)
-            })
+        //{plugin_type:number, cmd:string|number, code:0, data:{...}, msg:""}
+        //data.data {filename:, content:}
+        onGetServerFileData(data) {
+            let key = `${data.cmd}_${data.data.filename}`
+            this.fire(key, data)
         }
 
         saveData(key, data) {
@@ -54,14 +53,6 @@
             return this.datas[key]
         }
 
-        getJobSender(key) {
-            return this.jobs[key]
-        }
-
-        sendJobData(key, data) {
-            let job = this.getJobSender(key)
-            job.sendServerCmd(data)
-        }
 
         registerAll() {
             this._registerTypeJobs(PLUGIN_TYPE.CMD, CMD_JOBSENDER)

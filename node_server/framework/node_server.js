@@ -53,6 +53,7 @@ class NodeServer {
                 response.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,X-Access-Token,XKey,Authorization')
         
                 if (that._dealDataCall) {
+                    // {plugin_type:number, cmd:string|number, data:{...}}
                     that._dealDataCall(response, buffer)
                 } else {
                     that.responseBack(response, -1, {msg:"nobody deal data"})
@@ -66,7 +67,6 @@ class NodeServer {
     }
 
     // error:系统级  0正常 -1:数据未获得正确处理
-    // code:业务级
     // result: {plugin_type:number, cmd:string|number, code:0, data:{...}, msg:""}
     responseBack(response, error, result) {
         let o = {error:error, result}

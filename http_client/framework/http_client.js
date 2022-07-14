@@ -31,7 +31,9 @@
                 this.cmdQueue.splice(0, this.cmdQueue.length-MAX_QUEUE_LEN)
             }
 
-            this.fire(EVT_HTTP_CLIENT.DATA_QUEUE_CHG, this.cmdQueue)
+            mgr.timer.once(100, this, ()=> {
+                this.fire(EVT_HTTP_CLIENT.DATA_QUEUE_CHG, this.cmdQueue)
+            })
         }
 
         clearQueue() {
@@ -61,6 +63,7 @@
                 this.inRequest = false
             } else if (type == "complete") {
                 console.log("[[onHttpResponse]]", data)
+                this.inRequest = false
                 if (data.error == -1) {
                     console.error(data.result.msg)
                 } else {
@@ -70,7 +73,6 @@
                         console.log("nobody deal data", data)
                     }
                 }
-                this.inRequest = false
             }
         }
     }

@@ -11,3 +11,4 @@ class JobProjectStatus extends JobBase {
 
 
 module["exports"] = JobProjectStatus
+

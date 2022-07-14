@@ -1,6 +1,6 @@
 const JobGroup = require("../framework/jobs/job_group")
 const JobProjectStatus = require("./jobs/job_projectstatus")
-const JobProjectVersion = require("./jobs/job_projectversion")
+const JobReadConfigFile = require("./jobs/job_readconfigfile")
 const JobUpdateClient = require("./jobs/job_updateclient")
 const JobSyncArtRes = require("./jobs/job_syncartres")
 const EventDispatcher = require("../framework/libs/event_dispatcher")
@@ -23,7 +23,7 @@ let STATUS_JOBGROUP = {
 }
 
 let FILE_JOBGROUP = {
-    ["file_proj_version"] : [JobProjectVersion],
+    ["file_read_config"] : [JobReadConfigFile],
 }
 
 class Logic extends EventDispatcher {
@@ -41,9 +41,9 @@ class Logic extends EventDispatcher {
     _registerTypeJobs(type, groups, isAsync) {
         let pluginMgr = this.mgr.plugin
         for (let key in groups) {
-            let group = new JobGroup(key, type, isAsync)
+            let group = new JobGroup(this.mgr, key, type, isAsync)
             for (let cls of groups[key]) {
-                group.addJob(new cls())
+                group.addJob(new cls(group))
             }
             pluginMgr.registerJobGroup(type, key, group)
         }
