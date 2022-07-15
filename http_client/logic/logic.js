@@ -29,6 +29,10 @@
         }
 
         updateVoData() {
+            this.updateVoProjStatus()
+        }
+
+        updateVoProjStatus() {
             let key = Define.VO.DATA_PROJ_STATUS
             let vo = this.getData(key)
             vo.updateData()
@@ -38,19 +42,15 @@
             return this.jobs[key]
         }
 
-        sendJobCmd(cmd, data) {
+        sendJobCmd(cmd, data, cbk) {
             let job = this.getJobSender(cmd)
             job.sendServerCmd(data)
-        }
-
-        sendJobCmdStatus(cmd, data, cbk) {
-            this.sendJobCmd(cmd, data)
             if (cbk) {
                 this.once(cmd, null, cbk)
             }
         }
 
-        onJobCmdStatusBack(cmd, data) {
+        onJobCmdBack(cmd, data) {
             this.fire(cmd, data)
         }
 
@@ -96,8 +96,8 @@
 
 
         // {projName:projName}
-        onSyncArtResBack(data) {
-            logic.fire(EVT_LOGIC.SYNC_ART_RES, data)
+        onSyncArtResBack(cmd, data) {
+            this.logic.fire(cmd, data)
         }
 
         // {projName:projName}

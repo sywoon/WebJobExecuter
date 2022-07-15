@@ -6,7 +6,7 @@
         //data.data {data:{状态数据 所有项目}}
         // {"errMsg":"","status":0,"startTime":1647500026000,"lastUpdateTime":1647500075000}
         dealData(data) {
-            this.logic.onJobCmdStatusBack(data.cmd, data.data)
+            this.logic.onJobCmdBack(data.cmd, data.data)
         }
     }
 

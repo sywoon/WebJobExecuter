@@ -39,9 +39,9 @@ class JobGroup {
         }
 
         let job = this.jobs[this.jobIdx]
-        //异步任务 result将由第一个job决定
-        job.dealDataAsync(data, this.jobIdx== 0?result:null, this.nextJob.bind(this, data, result))
         this.jobIdx++;
+        //异步任务 result将由第一个job决定
+        job.dealDataAsync(data, this.jobIdx==1?result:null, this.nextJob.bind(this, data, result))
     }
 }
 

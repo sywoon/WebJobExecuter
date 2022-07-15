@@ -7,8 +7,26 @@
             this.projStatusAll = {}
         }
 
+        //没有数据 表示还未操作过
+        isStatusDone(projName) {
+            let cfg = this.projStatusAll[projName] || {status:PROJ_UPDATE_STATUS.NONE}
+            return cfg.status == PROJ_UPDATE_STATUS.NONE
+        }
+
+        isAllDone() {
+            let isDone = true
+            for (let projName in this.projStatusAll) {
+                let cfg = this.projStatusAll[projName]
+                if (cfg.status != PROJ_UPDATE_STATUS.NONE) {
+                    isDone = false
+                    break
+                }
+            }
+            return isDone
+        }
+
         updateData() {
-            this.logic.sendJobCmdStatus(JOB_CODE.STATUS_PROJECT, {}, this._onProjStatusBack.bind(this))
+            this.logic.sendJobCmd(JOB_CODE.STATUS_PROJECT, {}, this._onProjStatusBack.bind(this))
         }
 
         //data {projName:, data:{状态数据 某一个}}
@@ -20,6 +38,10 @@
                 this.setProjStatusAll(data.data)
             }
             this.logic.fire(EVT_LOGIC.PROJ_STATUS_UPDATE, this)
+
+            if (!this.isAllDone()) {
+                this.mgr.timer.once(Define.PROJ_STATUS_UPDATE_INTERVEL, this, this.updateData)
+            }
         }
 
         // "master":{"errMsg":"","status":0,"startTime":1647500026000,"lastUpdateTime":1647500075000}
