@@ -1,7 +1,8 @@
 (function (exports){
     class HttpClient extends EventDispatcher {
-        constructor() {
+        constructor(mgr) {
             super()
+            this.mgr = mgr
             let cfgNodeSvr = mgr.toolsCfg.getConfig("node_server")
             this.urlServer = `http://${cfgNodeSvr.ip}:${cfgNodeSvr.port}`
             this.urlWeb = Browser.getBaseUrl()
@@ -27,11 +28,11 @@
         pushToQueue(data) {
             this.cmdQueue.push(data)
 
-            if (this.cmdQueue.length > MAX_QUEUE_LEN) {
-                this.cmdQueue.splice(0, this.cmdQueue.length-MAX_QUEUE_LEN)
+            if (this.cmdQueue.length > Define.MAX_QUEUE_LEN) {
+                this.cmdQueue.splice(0, this.cmdQueue.length - Define.MAX_QUEUE_LEN)
             }
 
-            mgr.timer.once(100, this, ()=> {
+            this.mgr.timer.once(100, this, ()=> {
                 this.fire(EVT_HTTP_CLIENT.DATA_QUEUE_CHG, this.cmdQueue)
             })
         }

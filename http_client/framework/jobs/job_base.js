@@ -1,12 +1,14 @@
 (function(exports) {
     class JobBase {
-        constructor(cmd, pluginType) {
+        constructor(cmd, pluginType, logic) {
             this.cmd = cmd
             this.pluginType = pluginType
+            this.logic = logic
+            this.mgr = logic.mgr
         }
 
         getPlugin() {
-            return mgr.plugin.getPlugin(this.pluginType)
+            return this.mgr.plugin.getPlugin(this.pluginType)
         }
     
         sendServerCmd(data) {

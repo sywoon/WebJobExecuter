@@ -1,7 +1,8 @@
 
 class JobGroup {
-    constructor(mgr, cmd, pluginType, isAync) {
-        this.mgr = mgr
+    constructor(logic, cmd, pluginType, isAync) {
+        this.mgr = logic.mgr
+        this.logic = logic
         this.cmd = cmd
         this.pluginType = pluginType
         this.jobs = []

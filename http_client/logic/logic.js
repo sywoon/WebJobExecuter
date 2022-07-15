@@ -1,36 +1,61 @@
 (function(exports) {
     let CMD_JOBSENDER = {
-        [CMD_CODE.UPDATE_CLIENT] : JobUpdateClient,
-        [CMD_CODE.SYNC_ART_RES] : JobSyncArtRes,
+        [JOB_CODE.CMD_UPDATE_CLIENT] : JobUpdateClient,
+        [JOB_CODE.CMD_SYNC_ART_RES] : JobSyncArtRes,
     }
     
     let STATUS_JOBSENDER = {
-        ["status_project_status"] : JobProjectStatus,
-        ["status_all_projects"] : JobProjectStatus,
+        [JOB_CODE.STATUS_PROJECT] : JobProjectStatus,
     }
     
     let FILE_JOBSENDER = {
-        ["file_read_config"] : JobReadConfigFile,
+        [JOB_CODE.FILE_READ_CONFIG] : JobReadConfigFile,
     }
 
     class Logic extends EventDispatcher {
-        constructor() {
+        constructor(mgr) {
             super()
+            this.mgr = mgr
             this.datas = {}
             this.jobs = {}
+            this._initVo()
+        }
+
+        //业务功能 初始数据
+        _initVo() {
+            let key = Define.VO.DATA_PROJ_STATUS
+            let vo = new ProjectStatusVo(this)
+            this.saveData(key, vo)
+        }
+
+        updateVoData() {
+            let key = Define.VO.DATA_PROJ_STATUS
+            let vo = this.getData(key)
+            vo.updateData()
         }
 
         getJobSender(key) {
             return this.jobs[key]
         }
 
-        sendJobData(cmd, data) {
+        sendJobCmd(cmd, data) {
             let job = this.getJobSender(cmd)
             job.sendServerCmd(data)
         }
 
-        sendJobCmdFileData(cmd, filename, cbk) {
-            this.sendJobData(cmd, {filename:filename})
+        sendJobCmdStatus(cmd, data, cbk) {
+            this.sendJobCmd(cmd, data)
+            if (cbk) {
+                this.once(cmd, null, cbk)
+            }
+        }
+
+        onJobCmdStatusBack(cmd, data) {
+            this.fire(cmd, data)
+        }
+
+        sendJobCmdFile(cmd, filename, cbk) {
+            this.sendJobCmd(cmd, {filename:filename})
 
             if (cbk) {
                 let key = `${cmd}_${filename}`
@@ -38,12 +63,12 @@
             }
         }
 
-        //{plugin_type:number, cmd:string|number, code:0, data:{...}, msg:""}
-        //data.data {filename:, content:}
-        onGetServerFileData(data) {
-            let key = `${data.cmd}_${data.data.filename}`
+        // {filename:, content:}
+        onJobCmdFileBack(cmd, data) {
+            let key = `${cmd}_${data.filename}`
             this.fire(key, data)
         }
+
 
         saveData(key, data) {
             this.datas[key] = data
@@ -61,12 +86,23 @@
         }
 
         _registerTypeJobs(type, senders) {
-            let pluginMgr = mgr.plugin
+            let pluginMgr = this.mgr.plugin
             for (let key in senders) {
-                let sender = new senders[key](key, type)
+                let sender = new senders[key](key, type, this)
                 pluginMgr.registerJobSender(type, key, sender)
                 this.jobs[key] = sender
             }
+        }
+
+
+        // {projName:projName}
+        onSyncArtResBack(data) {
+            logic.fire(EVT_LOGIC.SYNC_ART_RES, data)
+        }
+
+        // {projName:projName}
+        onUpdateClientBack(data) {
+
         }
     }
 

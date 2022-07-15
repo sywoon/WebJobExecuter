@@ -1,8 +1,9 @@
 (function(exports) {
     class SyncLoaded {
-        constructor(allCbk) {
+        constructor(allCbk, ...params) {
             this.records = {}
             this.allCbk = allCbk
+            this.params = params
         }
 
         addCheck(name) {
@@ -19,7 +20,7 @@
                 if (!this.records[name])
                     return
             }
-            this.allCbk && this.allCbk()
+            this.allCbk && this.allCbk.apply(null, this.params || [])
         }
     }
     exports.SyncLoaded = SyncLoaded

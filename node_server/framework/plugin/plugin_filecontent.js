@@ -26,6 +26,17 @@ class PluginFileContent extends PluginBase {
         }
         return data
     }
+
+    writeFileSync(file, data) {
+        let type = typeof(data)
+        if (type == "object") {
+            data = JSON.stringify(data)
+        } else if (type == "string") {
+        } else {
+            data = String(data)
+        }
+        fs.writeFileSync(file, data)
+    }
 }
 
 

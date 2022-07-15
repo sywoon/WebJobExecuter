@@ -5,7 +5,7 @@
         //{plugin_type:number, cmd:string|number, code:0, data:{...}, msg:""}
         //data.data {filename:, content:}
         dealData(data) {
-            logic.onGetServerFileData(data)
+            this.logic.onJobCmdFileBack(data.cmd, data.data)
         }
     }
 

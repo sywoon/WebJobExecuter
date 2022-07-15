@@ -10,7 +10,7 @@
         }
 
         _loadConfig() {
-            let url = `${this.baseUrl}/${TOOL_FOLDER_NAME}/config/tools_config.json`
+            let url = `${this.baseUrl}/${Define.TOOL_FOLDER_NAME}/config/tools_config.json`
             this.xhr.send(url, "", "get", "json")
         }
 

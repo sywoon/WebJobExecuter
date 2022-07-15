@@ -5,31 +5,45 @@ const JobUpdateClient = require("./jobs/job_updateclient")
 const JobSyncArtRes = require("./jobs/job_syncartres")
 const EventDispatcher = require("../framework/libs/event_dispatcher")
 const Define = require("./../define")
+const ProjectStatusVo = require("./vo/vo_projectstatus")
+
 
 let PLUGIN_TYPE = Define.PLUGIN_TYPE
-let CMD_CODE = {
-    UPDATE_CLIENT: 1,
-    SYNC_ART_RES: 2, //同步美术资源
-}
+let JOB_CODE = Define.JOB_CODE
 
 let CMD_JOBGROUP = {
-    [CMD_CODE.UPDATE_CLIENT] : [JobUpdateClient],
-    [CMD_CODE.SYNC_ART_RES] : [JobSyncArtRes],
+    [JOB_CODE.CMD_UPDATE_CLIENT] : [JobUpdateClient],
+    [JOB_CODE.CMD_SYNC_ART_RES] : [JobSyncArtRes],
 }
 
 let STATUS_JOBGROUP = {
-    ["status_project_status"] : [JobProjectStatus],
-    ["status_all_projects"] : [JobProjectStatus],
+    [JOB_CODE.STATUS_PROJECT] : [JobProjectStatus],
 }
 
 let FILE_JOBGROUP = {
-    ["file_read_config"] : [JobReadConfigFile],
+    [JOB_CODE.FILE_READ_CONFIG] : [JobReadConfigFile],
 }
 
 class Logic extends EventDispatcher {
     constructor(mgr) {
         super()
         this.mgr = mgr
+        this.datas = {}
+        this._initVo()
+    }
+
+    _initVo() {
+        let key = Define.VO.DATA_PROJ_STATUS
+        let vo = new ProjectStatusVo(this)
+        this.saveData(key, vo)
+    }
+
+    saveData(key, data) {
+        this.datas[key] = data
+    }
+
+    getData(key) {
+        return this.datas[key]
     }
 
     registerAll() {
@@ -41,7 +55,7 @@ class Logic extends EventDispatcher {
     _registerTypeJobs(type, groups, isAsync) {
         let pluginMgr = this.mgr.plugin
         for (let key in groups) {
-            let group = new JobGroup(this.mgr, key, type, isAsync)
+            let group = new JobGroup(this, key, type, isAsync)
             for (let cls of groups[key]) {
                 group.addJob(new cls(group))
             }
