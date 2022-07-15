@@ -13,7 +13,7 @@ class JobUpdateClient extends JobBase {
         cfgStatus.status = Define.PROJECT_STATUS.PREPARE
         voProjStatus.setProjStatus(data.projName, cfgStatus)
 
-        logger.log("JobUpdateClient", data, result)
+        result.data = {projName: data.projName}
         
         this.mgr.timer.once(3000, this, ()=>{
             console.log("chg status 1=========")

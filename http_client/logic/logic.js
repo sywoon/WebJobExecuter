@@ -97,7 +97,7 @@
 
         // {projName:projName}
         onSyncArtResBack(cmd, data) {
-            this.logic.fire(cmd, data)
+            this.fire(cmd, data)
         }
 
         // {projName:projName}
