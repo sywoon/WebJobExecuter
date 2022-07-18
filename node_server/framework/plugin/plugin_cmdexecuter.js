@@ -23,7 +23,7 @@ class PluginCmdExecuter extends PluginBase {
         }
 
         super.dealData(data, result, ()=> {
-            this.inprocess = false
+            this.inprocess = true
         })
     }
 

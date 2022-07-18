@@ -7,6 +7,8 @@
             this.urlServer = `http://${cfgNodeSvr.ip}:${cfgNodeSvr.port}`
             this.urlWeb = Browser.getBaseUrl()
             this.cmdQueue = []
+            this.cmdQueueASync = []
+            this.lastSendSync = true
 
             this.dealDataCall = null
             this.inRequest = false
@@ -26,57 +28,89 @@
         //{plugin_type:number, cmd:string|number, data:{...}}
         send(data) {
             this.pushToQueue(data)
-            this._sendNext()
+            this._sendNext(true)  //异步任务的限制 业务自己完成 这里都算能执行
         }
 
-        _filterQueueData(data) {
-            let key = data[data.length-1]["__key"]
+        onCmdEnd(cmd) {
+            this._sendNext(ASYNC_JOB[cmd])
+        }
+
+        _filterSameCmd(queue) {
+            if (queue.length == 0)
+                return
+            let key = queue[queue.length-1]["__key"]
             if (!key)
                 return
 
-            for (let i = data.length-2; i >= 0; i--) {
-                if (data[i]["__key"] == key)
-                    data.splice(i, 1)
+            for (let i = queue.length-2; i >= 0; i--) {
+                if (queue[i]["__key"] == key)
+                    queue.splice(i, 1)
+            }
+        }
+
+        _limitQueueCount(queue) {
+            if (queue.length > Define.MAX_QUEUE_LEN) {
+                queue.splice(0, queue.length - Define.MAX_QUEUE_LEN)
             }
         }
 
         pushToQueue(data) {
             console.log("push queue", data)
-            this.cmdQueue.push(data)
-            this._filterQueueData(this.cmdQueue)
-
-            if (this.cmdQueue.length > Define.MAX_QUEUE_LEN) {
-                this.cmdQueue.splice(0, this.cmdQueue.length - Define.MAX_QUEUE_LEN)
+            if (ASYNC_JOB[data.cmd]) {
+                this.cmdQueueASync.push(data)
+            } else {
+                this.cmdQueue.push(data)
             }
 
-            this.mgr.timer.once(0, this, ()=> {
-                this.fire(EVT_HTTP_CLIENT.DATA_QUEUE_CHG, this.cmdQueue)
-            })
-        }
-
-        clearQueue() {
-            this.cmdQueue = []
+            this._filterSameCmd(this.cmdQueueASync)
+            this._filterSameCmd(this.cmdQueue)
+            this._limitQueueCount(this.cmdQueueASync)
+            this._limitQueueCount(this.cmdQueue)
         }
 
         getQueueInfo() {
             return `当前队列数:${this.cmdQueue.length}`
         }
 
-        _sendNext() {
+        _getNextCmdData(canAsync) {
+            if (this.cmdQueue.length == 0 && this.cmdQueueASync.length == 0)
+                return null
+
+            if (!canAsync) {
+                if (this.cmdQueue.length == 0)
+                    return null
+                return this.cmdQueue.shift()
+            }
+
+                //交替发送
+            let data = null
+            if (this.cmdQueue.length>0 && this.cmdQueueASync.length>0) {
+                data = this.lastSendSync ? this.cmdQueueASync.shift() : this.cmdQueue.shift()
+            }
+            if (!data) {
+                if (this.cmdQueue.length > 0) {
+                    data = this.cmdQueue.shift()
+                } else if (this.cmdQueueASync.length > 0) {
+                    data = this.cmdQueueASync.shift()
+                }
+            }
+            this.lastSendSync = !this.lastSendSync
+            return data
+        }
+
+        _sendNext(canAsync) {
             if (this.inRequest)
                 return
 
-            if (this.cmdQueue.length == 0)
+            let data = this._getNextCmdData(canAsync)
+            if (!data)
                 return
 
-            let data = this.cmdQueue.shift()
             this.inRequest = true
             console.log("[[send http]]", data)
             this.xhr.send(this.urlServer, JSON.stringify(data), "post", "json")
 
-            this.mgr.timer.once(0, this, ()=> {
-                this.fire(EVT_HTTP_CLIENT.DATA_QUEUE_CHG, this.cmdQueue)
-            })
+            this.fire(EVT_HTTP_CLIENT.DATA_QUEUE_CHG, this.cmdQueue, this.cmdQueueASync)
         }
 
         //{error:0, result:{}}
@@ -96,8 +130,6 @@
                     }
                 }
             }
-
-            this._sendNext()
         }
     }
 

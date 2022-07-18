@@ -5,7 +5,6 @@
             this.logic = logic
             this.mgr = logic.mgr
             this.projStatusAll = {}
-            this.waitCmd = {}
         }
 
         isStatusDone(projName) {
@@ -35,25 +34,8 @@
             return isDone
         }
 
-        isProjInLock(projName) {
-            return this.lockProject == projName
-        }
-
-        //允许等待一个命令
-        setWaitCmd(cmd, data, lockProject) {
-            this.waitCmd.cmd = cmd
-            this.waitCmd.data = data
-            this.lockProject = lockProject
-        }
-
-        clearWaitCmd() {
-            this.waitCmd.cmd = null
-            this.waitCmd.data = null
-            this.lockProject = null
-        }
-
         updateData() {
-            this.logic.sendJobCmd(JOB_CODE.STATUS_PROJECT, {}, this._onProjStatusBack.bind(this))
+            this.logic.sendJobCmd(JOB_CODE.STATUS_PROJECT, {}, this._onProjStatusBack, this)
         }
 
         //data {projName:, data:{状态数据 某一个}}
@@ -68,11 +50,6 @@
 
             if (!this.isAllDone()) {
                 this.mgr.timer.once(Define.PROJ_STATUS_UPDATE_INTERVEL, this, this.updateData)
-            } else {
-                if (this.waitCmd.cmd) {
-                    this.logic.sendJobCmd(this.waitCmd.cmd, this.waitCmd.data, this._onProjStatusBack.bind(this))
-                    this.clearWaitCmd()
-                }
             }
         }
 
@@ -87,11 +64,12 @@
 
         setProjStatus(projName, data) {
             this.projStatusAll[projName] = data
-            this.writeConfig(this.projStatusAll)
+            this.logic.fire(EVT_LOGIC.PROJ_STATUS_UPDATE, this)
         }
 
         setProjStatusAll(data) {
             this.projStatusAll = data
+            this.logic.fire(EVT_LOGIC.PROJ_STATUS_UPDATE, this)
         }
     }
 

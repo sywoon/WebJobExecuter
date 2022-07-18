@@ -1,16 +1,16 @@
 (function(exports) {
     let CMD_JOBSENDER = {
-        [JOB_CODE.CMD_UPDATE_CLIENT] : JobUpdateClient,
-        [JOB_CODE.CMD_SYNC_ART_RES] : JobSyncArtRes,
+        [JOB_CODE.CMD_UPDATE_CLIENT] : [JobUpdateClient, MoniUpdateClient],
+        [JOB_CODE.CMD_SYNC_ART_RES] : [JobSyncArtRes, MoniUpdateClient],
     }
     
     let STATUS_JOBSENDER = {
-        [JOB_CODE.STATUS_PROJECT] : JobProjectStatus,
-        [JOB_CODE.STATUS_RESET_STATUS] : JobProjectStatus,
+        [JOB_CODE.STATUS_PROJECT] : [JobProjectStatus, MoniSyncJob],
+        [JOB_CODE.STATUS_RESET_STATUS] : [JobProjectStatus, MoniSyncJob],
     }
     
     let FILE_JOBSENDER = {
-        [JOB_CODE.FILE_READ_CONFIG] : JobReadConfigFile,
+        [JOB_CODE.FILE_READ_CONFIG] : [JobReadConfigFile, MoniSyncJob],
     }
 
     class Logic extends EventDispatcher {
@@ -69,12 +69,12 @@
             return key
         }
 
-        sendJobCmd(cmd, data, cbk) {
+        sendJobCmd(cmd, data, method, owner) {
             let job = this.getJobSender(cmd)
             data.__key = this.makeUniqueKey(cmd, data)
             job.sendServerCmd(data)
-            if (cbk) {
-                this.once(data.__key, null, cbk)
+            if (method) {
+                this.once(data.__key, owner, method)
             }
         }
 
@@ -102,16 +102,14 @@
             let pluginMgr = this.mgr.plugin
             for (let key in senders) {
                 let cmd = Number(key)
-                let sender = new senders[key](cmd, type, this)
+                let arr = senders[key]
+                let sender = new arr[0](cmd, type, this)
+                if (arr[1]) {
+                    sender.setMonitor(new arr[1](sender))
+                }
                 pluginMgr.registerJobSender(type, key, sender)
                 this.jobs[key] = sender
             }
-        }
-
-
-        // {projName:projName}
-        onUpdateClientBack(data) {
-
         }
     }
 
