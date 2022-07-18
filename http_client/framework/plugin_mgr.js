@@ -38,6 +38,10 @@
             this.serverSendCall && this.serverSendCall(data)
         }
 
+        setServerBusyCall(call) {
+            this.serverBusyCall = call
+        }
+
         //data: {plugin_type:number, cmd:string|number, code:0, data:{...}, msg:""}
         dealResponseData(data) {
             if (!data || !data.plugin_type) {
@@ -50,8 +54,10 @@
                 console.error(data.msg)
                 return
             } else if (data.code == CMD_ERROR.BUSY) {
-                let copy = {plugin_type:data.plugin_type, cmd:data.cmd, data:data.plugin_type}
-                client.pushToQueue(copy)
+                if (this.serverBusyCall) {
+                    let copy = {plugin_type:data.plugin_type, cmd:data.cmd, data:data.data}
+                    this.serverBusyCall(copy)
+                }
                 return
             }
 

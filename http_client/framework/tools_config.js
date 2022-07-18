@@ -18,7 +18,6 @@
             if (type == "onerror") {
                 console.error("load config failed tools_config.json")
             } else if (type == "complete") {
-                console.log("load tools_config.json", data)
                 this.toolsCfg = data
                 this._initCbk && this._initCbk()
             }

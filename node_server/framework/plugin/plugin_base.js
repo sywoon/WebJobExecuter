@@ -24,7 +24,7 @@ class PluginBase {
             return
         }
 
-        group.dealData(data.data, result)
+        group.dealData(data, result)
     }
 }
 

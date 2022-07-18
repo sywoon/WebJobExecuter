@@ -5,24 +5,51 @@
             this.logic = logic
             this.mgr = logic.mgr
             this.projStatusAll = {}
+            this.waitCmd = {}
         }
 
-        //没有数据 表示还未操作过
         isStatusDone(projName) {
-            let cfg = this.projStatusAll[projName] || {status:PROJ_UPDATE_STATUS.NONE}
-            return cfg.status == PROJ_UPDATE_STATUS.NONE
+            if (!this.projStatusAll[projName])  //没有数据 表示还未操作过
+                return true
+            
+            return this.projStatusAll[projName].status == PROJECT_STATUS.NONE
+        }
+
+        setStatus(projName, v) {
+            if (!this.projStatusAll[projName]) {
+                this.projStatusAll[projName] = {status:v}
+                return
+            } 
+            this.projStatusAll[projName].status = v
         }
 
         isAllDone() {
             let isDone = true
             for (let projName in this.projStatusAll) {
                 let cfg = this.projStatusAll[projName]
-                if (cfg.status != PROJ_UPDATE_STATUS.NONE) {
+                if (cfg.status != PROJECT_STATUS.NONE) {
                     isDone = false
                     break
                 }
             }
             return isDone
+        }
+
+        isProjInLock(projName) {
+            return this.lockProject == projName
+        }
+
+        //允许等待一个命令
+        setWaitCmd(cmd, data, lockProject) {
+            this.waitCmd.cmd = cmd
+            this.waitCmd.data = data
+            this.lockProject = lockProject
+        }
+
+        clearWaitCmd() {
+            this.waitCmd.cmd = null
+            this.waitCmd.data = null
+            this.lockProject = null
         }
 
         updateData() {
@@ -41,6 +68,11 @@
 
             if (!this.isAllDone()) {
                 this.mgr.timer.once(Define.PROJ_STATUS_UPDATE_INTERVEL, this, this.updateData)
+            } else {
+                if (this.waitCmd.cmd) {
+                    this.logic.sendJobCmd(this.waitCmd.cmd, this.waitCmd.data, this._onProjStatusBack.bind(this))
+                    this.clearWaitCmd()
+                }
             }
         }
 

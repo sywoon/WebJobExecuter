@@ -18,6 +18,7 @@ let CMD_JOBGROUP = {
 
 let STATUS_JOBGROUP = {
     [JOB_CODE.STATUS_PROJECT] : [JobProjectStatus],
+    [JOB_CODE.STATUS_RESET_STATUS] : [JobProjectStatus],
 }
 
 let FILE_JOBGROUP = {

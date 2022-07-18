@@ -1,81 +1,81 @@
 (function(exports) {
-    var debug = true;
+    var debug = false
 
     function HttpRequest() {
-        this.http = new XMLHttpRequest();
-        this.http.timeout = 0;
-        this.responseType = "text";
+        this.http = new XMLHttpRequest()
+        this.http.timeout = 0
+        this.responseType = "text"
     }
 
     HttpRequest.prototype.setCallback = function (cbk) {
-        this.cbk = cbk;
+        this.cbk = cbk
     }
 
     // method: "get"、"post"、"head"
     HttpRequest.prototype.send = function (url, data, method, responseType, headers) {
-        var http = this.http;
-        http.open(method, url, true);
+        var http = this.http
+        http.open(method, url, true)
 
-        var isJson = false;
+        var isJson = false
         if (headers) {
             for (var i = 0; i < headers.length; i++) {
-                http.setRequestHeader(headers[i++], headers[i]);
+                http.setRequestHeader(headers[i++], headers[i])
             }
         } else {
             if (!data || typeof (data) == 'string') 
-                http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
 			else{ 
-				http.setRequestHeader("Content-Type", "application/json");
-				isJson = true;
+				http.setRequestHeader("Content-Type", "application/json")
+				isJson = true
 			}
         }
 
-        this.responseType = responseType;
+        this.responseType = responseType
 
-        let restype = responseType !== "arraybuffer" ? "text" : "arraybuffer";
-        http.responseType = restype;
+        let restype = responseType !== "arraybuffer" ? "text" : "arraybuffer"
+        http.responseType = restype
 
-        var _this_ = this;
+        var _this_ = this
         http.onerror = function (e) {
-            _this_._onError(e);
+            _this_._onError(e)
         }
         http.onabort = function (e) {
-            _this_._onAbort(e);
+            _this_._onAbort(e)
         }
         http.onprogress = function (e) {
-            _this_._onProgress(e);
+            _this_._onProgress(e)
         }
         http.onload = function (e) {
-            _this_._onLoad(e);
+            _this_._onLoad(e)
         }
-        http.send( isJson ? JSON.stringify(data) : data);
+        http.send( isJson ? JSON.stringify(data) : data)
     }
 
 
     HttpRequest.prototype._onProgress = function (e) {
-        debug && console.log("onProgress", e.loaded, e.total);
-        this.cbk && this.cbk("onprogress", e.loaded, e.total);
+        debug && console.log("onProgress", e.loaded, e.total)
+        this.cbk && this.cbk("onprogress", e.loaded, e.total)
     }
 
     HttpRequest.prototype._onAbort = function (e) {
-        debug && console.log("Request was aborted by user");
-        this.cbk && this.cbk("onabort");
+        debug && console.log("Request was aborted by user")
+        this.cbk && this.cbk("onabort")
     }
 
     HttpRequest.prototype._onError = function (e) {
         console.error("Request failed Status:" + this.http.status 
-                + " text:" + this.http.statusText);
-        this.cbk && this.cbk("onerror");
+                + " text:" + this.http.statusText)
+        this.cbk && this.cbk("onerror")
     }
 
     HttpRequest.prototype._onLoad = function () {
         var http = this.http;
-        var status = http.status !== undefined ? http.status : 200;
+        var status = http.status !== undefined ? http.status : 200
 
         if (status === 200 || status === 204 || status === 0) {
-            this.complete();
+            this.complete()
         } else {
-            console.error("[" + http.status + "]" + http.statusText + ":" + http.responseURL);
+            console.error("[" + http.status + "]" + http.statusText + ":" + http.responseURL)
         }
     }
 
@@ -83,13 +83,13 @@
     HttpRequest.prototype.complete = function () {
         var data;
         if (this.responseType === "json") {
-            data = JSON.parse(this.http.responseText);
+            data = JSON.parse(this.http.responseText)
         } else {
-            data = this.http.response || this.http.responseText;
+            data = this.http.response || this.http.responseText
         }
-        debug && console.log("complete", data);
-        this.cbk && this.cbk("complete", data);
+        debug && console.log("complete", data)
+        this.cbk && this.cbk("complete", data)
     }
 
-    exports.HttpRequest = HttpRequest;
-})(window);
+    exports.HttpRequest = HttpRequest
+})(window)

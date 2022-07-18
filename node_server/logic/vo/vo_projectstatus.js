@@ -9,9 +9,27 @@ class ProjectStatusVo {
     constructor(logic) {
         this.logic = logic
         this.mgr = logic.mgr
-        this.projStatus = {}
+        this.projStatusAll = {}
 
         this._init()
+    }
+
+    //没有数据 表示还未操作过
+    isStatusDone(projName) {
+        let cfg = this.projStatusAll[projName] || {status:PROJECT_STATUS.NONE}
+        return cfg.status == PROJECT_STATUS.NONE
+    }
+
+    isAllDone() {
+        let isDone = true
+        for (let projName in this.projStatusAll) {
+            let cfg = this.projStatusAll[projName]
+            if (cfg.status != PROJECT_STATUS.NONE) {
+                isDone = false
+                break
+            }
+        }
+        return isDone
     }
 
     _init() {
@@ -20,20 +38,20 @@ class ProjectStatusVo {
 
     updateProjStatusFromFile() {
         let data = this.readConfig()
-        this.projStatus = data
+        this.projStatusAll = data
     }
 
     getProjStatus(projName) {
-        return this.projStatus[projName] || {}
+        return this.projStatusAll[projName] || {}
     }
 
     getProjStatusAll() {
-        return this.projStatus
+        return this.projStatusAll
     }
 
     setProjStatus(projName, data) {
-        this.projStatus[projName] = data
-        this.writeConfig(this.projStatus)
+        this.projStatusAll[projName] = data
+        this.writeConfig(this.projStatusAll)
     }
     
 

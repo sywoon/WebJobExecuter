@@ -14,7 +14,7 @@ class PluginCmdExecuter extends PluginBase {
         this.inprocess = false
     }
 
-    // data:{cmd:number, data:{...}}
+    // {plugin_type:number, cmd:string|number, data:{...}}
     dealData(data, result) {
         if (this.inprocess) {
             result.code = CMD_ERROR.BUSY

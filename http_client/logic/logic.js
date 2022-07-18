@@ -6,6 +6,7 @@
     
     let STATUS_JOBSENDER = {
         [JOB_CODE.STATUS_PROJECT] : JobProjectStatus,
+        [JOB_CODE.STATUS_RESET_STATUS] : JobProjectStatus,
     }
     
     let FILE_JOBSENDER = {
@@ -42,33 +43,45 @@
             return this.jobs[key]
         }
 
+        makeUniqueKey(cmd, data) {
+            let key
+            switch (cmd) {
+                case JOB_CODE.CMD_UPDATE_CLIENT:
+                case JOB_CODE.CMD_SYNC_ART_RES:
+                    key = `${cmd}_${data.projName}`
+
+                case JOB_CODE.STATUS_PROJECT:
+                    if (data.projName) {
+                        key = `${cmd}_${data.projName}`
+                    } else {
+                        key = `${cmd}`
+                    }
+                    break
+                case JOB_CODE.STATUS_RESET_STATUS:
+                    key = `${cmd}_${data.projName}`
+                    break
+                case JOB_CODE.FILE_READ_CONFIG:
+                    key = `${cmd}_${data.filename}`
+                    break
+                default:
+                    key = `${cmd}`
+            }
+            return key
+        }
+
         sendJobCmd(cmd, data, cbk) {
             let job = this.getJobSender(cmd)
+            data.__key = this.makeUniqueKey(cmd, data)
             job.sendServerCmd(data)
             if (cbk) {
-                this.once(cmd, null, cbk)
+                this.once(data.__key, null, cbk)
             }
         }
 
         onJobCmdBack(cmd, data) {
-            this.fire(cmd, data)
-        }
-
-        sendJobCmdFile(cmd, filename, cbk) {
-            this.sendJobCmd(cmd, {filename:filename})
-
-            if (cbk) {
-                let key = `${cmd}_${filename}`
-                this.once(key, null, cbk)
-            }
-        }
-
-        // {filename:, content:}
-        onJobCmdFileBack(cmd, data) {
-            let key = `${cmd}_${data.filename}`
+            let key = this.makeUniqueKey(cmd, data)
             this.fire(key, data)
         }
-
 
         saveData(key, data) {
             this.datas[key] = data
@@ -88,17 +101,13 @@
         _registerTypeJobs(type, senders) {
             let pluginMgr = this.mgr.plugin
             for (let key in senders) {
-                let sender = new senders[key](key, type, this)
+                let cmd = Number(key)
+                let sender = new senders[key](cmd, type, this)
                 pluginMgr.registerJobSender(type, key, sender)
                 this.jobs[key] = sender
             }
         }
 
-
-        // {projName:projName}
-        onSyncArtResBack(cmd, data) {
-            this.fire(cmd, data)
-        }
 
         // {projName:projName}
         onUpdateClientBack(data) {
