@@ -148,10 +148,10 @@
             let timeMsg
             if (data.status == PROJECT_STATUS.NONE || data.status == PROJECT_STATUS.ERROR) {
                 let dateLast = new Date(Number(data.lastUpdateTime || data.startTime))
-                timeMsg = "更新结束时间: " + dateLast.toLocaleString()
+                timeMsg = "结束时间: " + dateLast.toLocaleString()
             } else {
                 let date = new Date(Number(data.startTime))
-                timeMsg = "更新开始时间: " + date.toLocaleString()
+                timeMsg = "开始时间: " + date.toLocaleString()
             }
 
             let str = ""

@@ -144,7 +144,7 @@ end
 
 
 function M:updateExcel()
-    myLog("\n==[Project]更新excel")
+    myLog("\n==[Project]update excel")
 
     local cmd = self.packToolPath .. "\\bin\\excel_update.bat " .. self.projPath
     local result = self:runBatCmd(cmd)
@@ -154,7 +154,7 @@ function M:updateExcel()
     local cfgVersion = self:getDynamicVersion("excel")
     local chged = versionNew ~= cfgVersion
 
-    myLog("==[Project]更新excel End\n", versionNew, cfgVersion)
+    myLog("==[Project]update excel End\n", versionNew, cfgVersion)
     return chged, versionNew
 end
 
@@ -162,31 +162,31 @@ end
 function M:exportExcel()
     local chged, versionNew = self:updateExcel()
     if not chged then
-        myLog("==[Project]excel已是最新! version:" .. versionNew)
+        myLog("==[Project]excel already lastest! version:" .. versionNew)
         return true, false
     end
     
-    myLog("\n==[Project]导出excel")
+    myLog("\n==[Project]export excel")
     local cmd = self.packToolPath .. "\\bin\\excel_export.bat " .. self.projPath
     -- local rst, msg, code = os.execute(cmd)
     -- myLog("exportExcel", rst, msg, code)  --true    exit    0
 
     local result = self:runBatCmd(cmd)
     if string.match(result, "Traceback") then
-        myLoge("导出excel失败", result)
-        return false, false, "导出excel失败:" .. _A2U(result)
+        myLoge("export excel failed", result)
+        return false, false, "export excel failed:" .. _A2U(result)
     end
 
     -- 其他情况导表报错  导致版本升了  数据不是最新的？
     -- 有这种可能  还没发现！
     self:setDynamicVersion("excel", versionNew)
     
-    myLog("==[Project]导出excel End\n")
+    myLog("==[Project]export excel End\n")
     return true, true
 end
 
 function M:updateProtol()
-    myLog("\n==[Project]更新协议")
+    myLog("\n==[Project]update proto")
     local branch = self:getGitBranch()
     
     -- 更新一次后 才会有分支文件夹
@@ -195,7 +195,7 @@ function M:updateProtol()
     local result = self:runBatCmd(cmd)
 
     if string.match(result, "error") then
-        myLoge("更新proto失败", result)
+        myLoge("update proto failed", result)
         return false, 0
     end
 
@@ -204,7 +204,7 @@ function M:updateProtol()
     local cfgVersion = self:getDynamicVersion("protol")
     
     local chged = cfgVersion ~= versionNew
-    myLog("==[Project]更新协议 End\n", versionNew, cfgVersion)
+    myLog("==[Project]update proto End\n", versionNew, cfgVersion)
     return chged, versionNew
 end
 
@@ -214,33 +214,33 @@ function M:exportProtol()
     local chged, versionNew = self:updateProtol()
     if not chged then
         if versionNew == 0 then
-            return false, false, "更新协议失败"
+            return false, false, "update proto failed"
         end
 
-        myLog("==[Project]协议已是最新! version:" .. versionNew)
+        myLog("==[Project]proto already lastest! version:" .. versionNew)
         return true, false
     end
 
-    myLog("\n==[Project]导出Protol")
+    myLog("\n==[Project]export Protol")
     local branch = self:getGitBranch()
     local cmd = _F("%s\\bin\\protol_export.bat %s %s", self.packToolPath,
                         self.projPath, branch)
     local result = self:runBatCmd(cmd)
     if string.match(result, "error") then
-        myLoge("导出协议失败", result)
-        return false, 0, "导出协议失败:" .. _A2U(result)
+        myLoge("export proto falied", result)
+        return false, 0, "export proto failed:" .. _A2U(result)
     end
 
     -- 没找到协议导出出错的情况 
 
     self:setDynamicVersion("protol", versionNew)
-    myLog("==[Project]导出Protol End\n", versionNew)
+    myLog("==[Project]export Protol End\n", versionNew)
     return true, true
 end
 
 
 function M:updateUI()
-    myLog("\n==[Project]更新UI")
+    myLog("\n==[Project]update UI")
     local branch = self:getGitBranch()
     local cmd = _F("%s\\bin\\ui_update.bat %s %s", self.packToolPath,
                         self.projPath, branch)
@@ -253,7 +253,7 @@ function M:updateUI()
     
     local chged = cfgVersion ~= versionNew
 
-    myLog("==[Project]更新UI End\n", versionNew, cfgVersion)
+    myLog("==[Project]update UI End\n", versionNew, cfgVersion)
     return chged, versionNew
 end
 
@@ -261,18 +261,18 @@ end
 function M:compileUI()
     local chged, versionNew = self:updateUI()
     if not chged then
-        myLog("==[Project]UI已是最新! version:" .. versionNew)
+        myLog("==[Project]UI already lastest! version:" .. versionNew)
         return true
     end
     
-    myLog("\n==[Project]编译UI(费时)")
+    myLog("\n==[Project]compile UI(long time)")
     local cmd = self.packToolPath .. "\\bin\\ui_compile.bat " .. self.projPath
     local result = self:runBatCmd(cmd)
 
     if string.match(result, "Error:") then
         myLog(result)
-        myLoge("编译UI失败")
-        return false, false, "编译UI失败:" .. _A2U(result)
+        myLoge("compile ui failed")
+        return false, false, "compile ui failed:" .. _A2U(result)
     end
 
     if CONVERT_TO_PNG8 then
@@ -280,13 +280,13 @@ function M:compileUI()
     end
 
     self:setDynamicVersion("uiproj", versionNew)
-    myLog("==[Project]编译UI End\n")
+    myLog("==[Project]compile UI End\n")
     return true
 end
 
 function M:convertUIPng8()
     local uiPath = self.projPath .. "/shj_client_git/bin/res/atlas"
-    myLog("压缩图片：" .. uiPath)
+    myLog("==[Project]compress image：" .. uiPath)
     Png8Cache:convertPngPath(uiPath)
 end
 
@@ -295,7 +295,7 @@ end
 --比如：excel proto uiproj
 --由于client更新时会先把修改的还原了 所以需要先保存
 function M:_backupClientOthers()
-    myLog("备份临时资源")
+    myLog("backup temp res")
     local clientBackup = self.projConfig["commonCfg"].clientBackup
     local tempPath = self.projPath .. "__temp__" .. os.time() .. "/"
     os.rmdir(tempPath)
@@ -309,7 +309,7 @@ function M:_backupClientOthers()
 end
 
 function M:_restoreClientOthers(backupPath)
-    myLog("恢复临时资源")
+    myLog("restore temp res")
     local clientBackup = self.projConfig["commonCfg"].clientBackup
     local clientPath = self.projPath .. "/shj_client_git/"
     for _, file in ipairs(clientBackup) do
@@ -322,7 +322,7 @@ end
 
 
 function M:updateCient()
-    myLog("\n==[Project]更新客户端")
+    myLog("\n==[Project]update client")
 
     local backupPath = self:_backupClientOthers()
     local branch = self:getGitBranch()
@@ -339,7 +339,7 @@ function M:updateCient()
     
     local chged = cfgVersion ~= versionNew
 
-    myLog("==[Project]更新客户端 End\n", versionNew, cfgVersion)
+    myLog("==[Project]update client End\n", versionNew, cfgVersion)
     return chged, versionNew
 end
 
@@ -347,35 +347,35 @@ end
 function M:compileClient()
     local chged, versionNew = self:updateCient()
     if not chged then
-        myLog("==[Project]客户端已是最新! version:" .. versionNew)
+        myLog("==[Project]client already lastest! version:" .. versionNew)
         return true
     end
     
-    myLog("\n==[Project]编译客户端(费时)")
+    myLog("\n==[Project]compile client(long time)")
     local cmd = _F("%s\\bin\\client_compile.bat %s", self.packToolPath,
                         self.projPath)
 
     --比较久 用execute可以显示子步骤   但是无法通过返回值判断是否失败
     -- local rst, msg, code = os.execute(cmd)
     -- if not rst then
-    --     myLog(("编译客户端失败:" .. msg))
+    --     myLog(("compile client failed:" .. msg))
     --     return false
     -- end
 
     local result = self:runBatCmd(cmd)
     if string.match(result, "error") then
     	myLog(result)
-        myLoge("编译客户端失败")
-        return false, false, "编译客户端失败:" .. _A2U(result)
+        myLoge("compile client failed")
+        return false, false, "compile client failed:" .. _A2U(result)
     end
 
     self:setDynamicVersion("client", versionNew)
-    myLog("==[Project]编译客户端 End\n")
+    myLog("==[Project]compile client End\n")
     return true
 end
 
 function M:syncResFromEdit()
-    myLog("\n==[Project]同步资源(费时)")
+    myLog("\n==[Project]sync resource(long time)")
     local backupPath = self:_backupClientOthers()
     local cmd = _F("%s\\bin\\sync_res_from_uiedit.bat %s", self.packToolPath,
                         self.projPath)
@@ -386,14 +386,14 @@ function M:syncResFromEdit()
 
     if string.match(result, "error") then
         myLog(result)
-        myLoge("同步资源失败")
-        return false, false, "同步资源失败:" .. _A2U(result)
+        myLoge("sync resource failed")
+        return false, false, "sync resource failed:" .. _A2U(result)
     else
         print(result)
     end
 
     
-    myLog("==[Project]同步资源 End\n")
+    myLog("==[Project]sync resource End\n")
     return true
 end
 

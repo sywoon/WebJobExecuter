@@ -43,8 +43,8 @@ class JobSyncArtRes extends JobBase {
         let toolRootPath = projConfig.getToolRootPath()
         let projPath = projConfig.getProjectPath(projName)
         let projBranch = projConfig.getProjectBranch(projName)
-        let sync_res_tool_cmd = "sync_res_from_uiedit.bat"
-        let cmd = `start cmd /C ${toolRootPath}/tools/${sync_res_tool_cmd} ${projName} ${projPath} ${projBranch}`
+        let sync_res_tool_cmd = "sync_res_from_uiedit.bat"  //start cmd /C 
+        let cmd = `${toolRootPath}/tools/${sync_res_tool_cmd} ${projName} ${projPath} ${projBranch}`
 
         let key = Define.VO.DATA_PROJ_STATUS
         let voProjStatus = this.logic.getData(key)

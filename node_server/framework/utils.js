@@ -1,4 +1,4 @@
-// const iconvl = require('iconv-lite')
+const iconvl = require('iconv-lite')
 const child_process = require('child_process')
 const logger = require ('./libs/logger')
 
@@ -17,23 +17,25 @@ class Utils {
     }
 
     //简体中文windows命令行，都使用的是CP936(近似于gb2312)编码
-    // static cmd2u(txtAnsi) {
-    //     let byte = iconvl.decode(Buffer.from(txtAnsi, "binary"), "cp936")
-    //     return byte
-    // }
+    static cmd2u(txtAnsi) {
+        let byte = iconvl.decode(Buffer.from(txtAnsi, "binary"), "cp936")
+        return byte
+    }
 
-    static runCmd(cmd) {
+    static runCmd(cmd, cbk) {
+        logger.log(`\n---run cmd:${cmd}`)
         child_process.exec(cmd, {maxBuffer: 1024 * 1024 * 10, encoding:"binary"}, (error, stdout, stderr) => {
-            console.log("runCmd cbk")
+            console.log("--run cmd cbk")
             if (error) {
                 let str = `批处理运行失败:${error}`
-                logger.log(str)
+                logger.error(str)
             } else {
-                logger.log("\n---cmd start")
-                logger.logcmd(`stdout ${stdout}`)
-                logger.logcmd(`stderr ${stderr}`)
-                logger.log("---cmd end")
+                if (stdout || stderr) {
+                    stdout && logger.logcmd(`stdout ${stdout}\n`)
+                    stderr && logger.logcmd(`stderr ${stderr}\n`)
+                }
             }
+            cbk && cbk(error, stdout, stderr)
         })
     }
 }

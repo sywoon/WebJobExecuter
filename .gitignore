@@ -2,7 +2,7 @@
 # folder
 tools/lua5.3/
 .vscode
-node_modules
+/node_modules
 log/
 __png8__cache__
 

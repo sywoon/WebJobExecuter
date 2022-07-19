@@ -1,5 +1,5 @@
-let fs = require("fs")
-// let Utils = require("./utils")
+const fs = require("fs")
+const iconvl = require('iconv-lite')
 
 let date = new Date()
 let logFile = `../log/node_log_${date.getFullYear()}_${date.getMonth()+1}_${date.getDate()}.txt`
@@ -60,10 +60,14 @@ function error(...msgs) {
     fs.appendFileSync(logFile, msg, {encodeing:"binary"})
 }
 
+function cmd2u(txtAnsi) {
+    let byte = iconvl.decode(Buffer.from(txtAnsi, "binary"), "cp936")
+    return byte
+}
+
 function logcmd(...msgs) {
     let msg = args2str(...msgs)
-    // msg = Utils.cmd2u(msg)
-    log(msg)
+    log(cmd2u(msg))
 }
 
 

@@ -2,6 +2,7 @@ const PluginBase = require("./plugin_base")
 const Define = require ("./../../define")
 const child_process = require('child_process')
 const logger = require ("../libs/logger")
+const Utils = require("../utils")
 
 const CMD_ERROR = Define.CMD_ERROR
 
@@ -28,19 +29,7 @@ class PluginCmdExecuter extends PluginBase {
     }
 
     runBatCmd(cmd, cbk) {
-        logger.log(`\n---run cmd:${cmd}`)
-        child_process.exec(cmd, {maxBuffer: 1024 * 1024 * 10, encoding:"binary"}, (error, stdout, stderr) => {
-            if (error) {
-                let str = `批处理运行失败:${error}`
-                logger.error(str)
-            } else {
-                logger.log("\n---cmd back\n")
-                stdout && logger.warn(`stdout ${stdout}\n`)
-                stderr && logger.warn(`stderr ${stderr}\n`)
-                logger.log("---cmd end")
-            }
-            cbk(error, stdout, stderr)
-        });
+        Utils.runCmd(cmd, cbk)
     }
 }
 

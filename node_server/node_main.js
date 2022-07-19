@@ -6,6 +6,7 @@ const ResponseOperator = require ("./framework/response_operator")
 const PM = require("./framework/plugin_mgr")
 const Logic = require("./logic/logic")
 const Mgr = require("./framework/mgr")
+const logger = require ("./framework/libs/logger")
 
 
 

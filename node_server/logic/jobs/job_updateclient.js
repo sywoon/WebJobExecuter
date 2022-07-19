@@ -50,14 +50,14 @@ class JobUpdateClient extends JobBase {
         let toolRootPath = projConfig.getToolRootPath()
         let projPath = projConfig.getProjectPath(projName)
         let projBranch = projConfig.getProjectBranch(projName)
-        let update_tool_cmd = "update_client_all.bat"
-        let cmd = `start cmd /C ${toolRootPath}/tools/${update_tool_cmd} ${projName} ${projPath} ${projBranch}`
+        let update_tool_cmd = "update_client_all.bat"  //start cmd /C
+        let cmd = `${toolRootPath}/tools/${update_tool_cmd} ${projName} ${projPath} ${projBranch}`
 
         let key = Define.VO.DATA_PROJ_STATUS
         let voProjStatus = this.logic.getData(key)
         voProjStatus.startReadConfig()  //工具中 通过修改文件 来同步执行进度
 
-        this.getPlugin().runBatCmd(cmd, ()=>{
+        this.getPlugin().runBatCmd(cmd, (error, stdout, stderr)=>{
             voProjStatus.stopReadConfig()
         })
     }

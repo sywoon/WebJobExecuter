@@ -8,7 +8,7 @@ let HEAD = {
     // 'Access-Control-Allow-Origin': `http://${ip}:${port}`
 }
 
-let debug = true
+let debug = false
 
 
 class NodeServer {
