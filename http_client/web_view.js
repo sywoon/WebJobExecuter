@@ -32,8 +32,10 @@
             let btns = [
                 ["更新", this._onBtnUpdateProject.bind(this)],
                 ["同步资源", this._onBtnSyncResource.bind(this)],
-                ["状态重置", this._onBtnResetStatus.bind(this)],
             ]
+            if (this.mgr.isAdmin()) {
+                btns.push(["状态重置", this._onBtnResetStatus.bind(this)])
+            }
             this._createProjectsItems(projects, btns)
 
             // this.refreshProjectStatus() --废弃 改为通过内存状态方式
