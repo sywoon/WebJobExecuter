@@ -16,6 +16,12 @@
         "STATUS" : "STATUS",
     }
 
+    //更新工具中 记录当前操作类型
+    let UPDATE_CMD_TYPE = {
+        UPDATE_CLIENT : 1,
+        SYNC_ART_RES : 2, 
+    }
+
     let JOB_CODE = {
         CMD_UPDATE_CLIENT: 1,
         CMD_SYNC_ART_RES: 2, //同步美术资源
@@ -33,7 +39,6 @@
         [JOB_CODE.CMD_UPDATE_CLIENT] : true,
         [JOB_CODE.CMD_SYNC_ART_RES] : true,
     }
-
 
     let CMD_ERROR = {
         "COMMON" : -1,
@@ -64,6 +69,7 @@
 
     exports.Define = Define
     exports.PLUGIN_TYPE = PLUGIN_TYPE
+    exports.UPDATE_CMD_TYPE =UPDATE_CMD_TYPE
     exports.JOB_CODE = JOB_CODE
     exports.ASYNC_JOB = ASYNC_JOB
     exports.CMD_ERROR = CMD_ERROR

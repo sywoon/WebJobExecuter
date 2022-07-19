@@ -1,8 +1,9 @@
 local SyncTool = require "SyncTool"
 local Png8Cache = require "Png8Cache"
 local Models = require "Models"
+local Define = require "Define"
 
-
+local CMD_TYPE = Define.CMD_TYPE
 local UPDATE_STATUS = {
     NONE = 0,
     PREPARE = 1,
@@ -54,7 +55,7 @@ end
 function App:startSyncRes()
     --update uiedit and client
     --无论版本是否最新 都要同步一次资源  因为不能确定是否同步过
-    self:changeUpdateStatus(UPDATE_STATUS.EXPORT_UI)
+    self:changeUpdateStatus(UPDATE_STATUS.EXPORT_UI, {cmd=CMD_TYPE.SYNC_ART_RES})
     models.project:updateUI()
     models.project:updateCient()
 
@@ -92,7 +93,7 @@ end
 function App:updateAll()
     local hasChged = false
 
-    self:changeUpdateStatus(UPDATE_STATUS.EXPORT_EXCEL, {startTime=os.time()*1000, errMsg=""})
+    self:changeUpdateStatus(UPDATE_STATUS.EXPORT_EXCEL, {cmd=CMD_TYPE.UPDATE_CLIENT, startTime=os.time()*1000, errMsg=""})
     local suc, chged, errMsg = models.project:exportExcel()
     if not suc then return false, chged, errMsg end
     hasChged = hasChged or chged

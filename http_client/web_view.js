@@ -55,11 +55,9 @@
         }
 
         _onServerBusy(data) {
-            let str = "其他端在执行该工程，请稍后再试"
-            console.log(str, data)
-            this.setStatusText(str)
+            console.log("服务器繁忙，自动重试中", data)
             //服务器在处理其他业务 重新刷新项目状态数据
-            // this.addWaitCmd(data.cmd, data.data, data.data.projName)
+            this.addWaitCmd(data.cmd, data.data, data.data.projName)
             this.logic.updateVoProjStatus()
         }
 
@@ -106,7 +104,7 @@
 
         _onBtnSyncResource(projName) {
             this.setStatusText("")
-            
+
             let key = Define.VO.DATA_PROJ_STATUS
             let voProjStatus = this.logic.getData(key)
             if (!voProjStatus.isStatusDone(projName) || this.isProjInLock(projName)) {
@@ -287,16 +285,22 @@
             for (let projName in allStatus) {
                 let dataProj = allStatus[projName]
                 if (dataProj.status != PROJECT_STATUS.NONE) {
-                    this._removeWaitCmd(projName)
+                    let cmd
+                    if (dataProj.cmd == UPDATE_CMD_TYPE.UPDATE_CLIENT) {
+                        cmd = JOB_CODE.CMD_UPDATE_CLIENT
+                    } else if (dataProj.cmd == UPDATE_CMD_TYPE.SYNC_ART_RES) {
+                        cmd = JOB_CODE.CMD_SYNC_ART_RES
+                    }
+                    this._removeWaitCmd(cmd, projName)
                 }
             }
         }
 
-        _removeWaitCmd(projName) {
+        _removeWaitCmd(cmd, projName) {
             let find = false
             for (let i = 0; i < this.waitCmdQueue.length; i++) {
                 let info = this.waitCmdQueue[i]
-                if (info.lockProject == projName) {
+                if (info.cmd == cmd && info.lockProject == projName) {
                     this.waitCmdQueue.splice(i, 1)
                     find = true
                     break
