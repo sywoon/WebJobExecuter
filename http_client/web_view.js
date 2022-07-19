@@ -36,7 +36,7 @@
             ]
             this._createProjectsItems(projects, btns)
 
-            // this.refreshProjectStatus()
+            // this.refreshProjectStatus() --废弃 改为通过内存状态方式
             this._onElementCreated()
         }
 
@@ -52,8 +52,8 @@
         }
 
         _onServerBusy(data) {
-            this.setStatusText("服务器繁忙，请稍后再试")
-            console.log("服务器繁忙，请稍后再试", data)
+            console.log("服务器繁忙，自动刷新", data)
+            //服务器在处理其他业务 重新刷新项目状态数据
             this.addWaitCmd(data.cmd, data.data, data.data.projName)
             this.logic.updateVoProjStatus()
         }
@@ -95,9 +95,6 @@
             voProjStatus.setStatus(projName, PROJECT_STATUS.PREPARE)
             this.logic.sendJobCmd(JOB_CODE.CMD_UPDATE_CLIENT, {projName:projName})
             this.setStatusText("准备开始...", projName)
-            // this.mgr.timer.once(3000, this, ()=>{
-            //     this.logic.updateVoProjStatus()
-            // })
         }
 
         _onBtnSyncResource(projName) {
@@ -117,9 +114,6 @@
             voProjStatus.setStatus(projName, PROJECT_STATUS.PREPARE)
             this.logic.sendJobCmd(JOB_CODE.CMD_SYNC_ART_RES, {projName:projName})
             this.setStatusText("准备开始...", projName)
-            // this.mgr.timer.once(3000, this, ()=>{
-            //     this.logic.updateVoProjStatus()
-            // })
         }
         
         _onBtnResetStatus(projName) {
@@ -290,7 +284,6 @@
         }
 
         _removeWaitCmd(projName) {
-            console.error("_removeWaitCmd", projName)
             let find = false
             for (let i = 0; i < this.waitCmdQueue.length; i++) {
                 let info = this.waitCmdQueue[i]

@@ -55,7 +55,6 @@
         }
 
         pushToQueue(data) {
-            console.log("push queue", data)
             if (ASYNC_JOB[data.cmd]) {
                 this.cmdQueueASync.push(data)
             } else {
@@ -82,7 +81,7 @@
                 return this.cmdQueue.shift()
             }
 
-                //交替发送
+            //交替发送
             let data = null
             if (this.cmdQueue.length>0 && this.cmdQueueASync.length>0) {
                 data = this.lastSendSync ? this.cmdQueueASync.shift() : this.cmdQueue.shift()
