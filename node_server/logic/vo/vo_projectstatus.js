@@ -23,6 +23,14 @@ class ProjectStatusVo {
         return status == PROJECT_STATUS.NONE || status == PROJECT_STATUS.ERROR
     }
 
+    isStatusError(projName) {
+        let status = this.projStatusAll[projName].status
+        if (!status) 
+            return false
+        
+        return status == PROJECT_STATUS.ERROR
+    }
+
     isAllDone() {
         let isDone = true
         for (let projName in this.projStatusAll) {
@@ -88,7 +96,7 @@ class ProjectStatusVo {
         plugin.writeFileSync(path, data)
     }
 
-    
+
 }
 
 

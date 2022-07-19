@@ -36,6 +36,7 @@ class JobSyncArtRes extends JobBase {
         // })
     }
 
+    //step1: 同步资源
     _runSyncResToolAsync(projName) {
         console.log("_runSyncResToolAsync", projName)
         
@@ -51,6 +52,36 @@ class JobSyncArtRes extends JobBase {
         voProjStatus.startReadConfig()  //工具中 通过修改文件 来同步执行进度
 
         this.getPlugin().runBatCmd(cmd, ()=>{
+            if (voProjStatus.isStatusError(projName)) {
+                voProjStatus.stopReadConfig()
+                return
+            }
+            this._spineScale(projName)
+        })
+    }
+
+    //step2：压缩spine
+    _spineScale(projName) {
+        let key = Define.VO.DATA_PROJ_STATUS
+        let voProjStatus = this.logic.getData(key)
+
+        let projConfig = this.logic.projConfig
+        let imgComCfg = projConfig.getProjectImgCompress(projName)
+        if (!imgComCfg["spine_scale"]) {   //"spine_scale" : "sync_res_sk_scale_mini.bat",
+            voProjStatus.stopReadConfig()
+            return
+        }
+
+        let cfgStatus = voProjStatus.getProjStatus(projName)
+        cfgStatus.status = Define.PROJECT_STATUS.COMPRESS_SPINE
+        voProjStatus.setProjStatus(projName, cfgStatus)
+
+        let projPath = projConfig.getProjectPath(projName)
+        let cmd = `${projPath}/shj_client_git/tools/image_scale_size/${imgComCfg["spine_scale"]}`
+        this.getPlugin().runBatCmd(cmd, (error, stdout, stderr)=>{
+            cfgStatus.status = Define.PROJECT_STATUS.NONE
+            voProjStatus.setProjStatus(projName, cfgStatus)
+
             voProjStatus.stopReadConfig()
         })
     }

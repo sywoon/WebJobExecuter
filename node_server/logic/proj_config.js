@@ -57,6 +57,15 @@ class ProjConfig {
         return null
     }
 
+    getProjectImgCompress(projName) {
+        for (let cfg of this.projCfg["projects"]) {
+            if (cfg.name === projName) {
+                return cfg.imageCompress
+            }
+        }
+        return null
+    }
+
     removeProjectGitVersion(projName) {
         let filepath = this.rootPath + "/config/project_config_dynamic.json"
         let data = fs.readFileSync(filepath, 'utf-8')

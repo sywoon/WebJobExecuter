@@ -187,8 +187,14 @@
                 case PROJECT_STATUS.COMPILE_CLIENT:
                     str = "编译客户端中..."
                     break
+                case PROJECT_STATUS.COMPRESS_IMAGE:
+                    str = "图片处理中..."
+                    break
                 case PROJECT_STATUS.SYNC_ART_RES:
                     str = "同步资源中..."
+                    break
+                case PROJECT_STATUS.COMPRESS_SPINE:
+                    str = "spine处理中..."
                     break
                 case PROJECT_STATUS.ERROR:
                     {

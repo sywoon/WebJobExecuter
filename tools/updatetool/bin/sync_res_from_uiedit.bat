@@ -34,9 +34,9 @@ pushd "%client%\tools\file_sync"
 popd
 
 :: compress sk to png8
-pushd "%client%\tools\image_scale_size"
-    call sync_res_sk_scale.bat
-popd
+::pushd "%client%\tools\image_scale_size"
+::    call sync_res_sk_scale.bat
+::popd
 
 pushd "%client%"
 git add .

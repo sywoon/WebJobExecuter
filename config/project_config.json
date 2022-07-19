@@ -27,19 +27,45 @@
             "name" : "master",
             "path" : "shj-master",
             "gitBranch" : "master",
-            "httpPath" : "/shj-master/shj_client_git/bin/index.html"
+            "httpPath" : "/shj-master/shj_client_git/bin/index.html",
+            "imageCompress" : {
+                "uiedit_config" : "program.laya",
+                "spine_scale" : "sync_res_sk_scale.bat",
+                "ui_scale" : "res_ui_scale.bat"
+            }
         },
         {
             "name" : "release",
             "path" : "shj-release",
             "gitBranch" : "release",
-            "httpPath" : "/shj-release/shj_client_git/bin/index_debug.html"
+            "httpPath" : "/shj-release/shj_client_git/bin/index_debug.html",
+            "imageCompress" : {
+                "uiedit_config" : "program.laya",
+                "spine_scale" : "sync_res_sk_scale.bat",
+                "ui_scale" : "res_ui_scale.bat"
+            }
         },
         {
             "name" : "qpbt",
             "path" : "shj-qpbt1",
             "gitBranch" : "qpbt",
-            "httpPath" : "/shj-qpbt1/shj_client_git/bin/index.html"
+            "httpPath" : "/shj-qpbt1/shj_client_git/bin/index.html",
+            "imageCompress" : {
+                "uiedit_config" : "program.laya",
+                "spine_scale" : "sync_res_sk_scale.bat",
+                "ui_scale" : "res_ui_scale.bat"
+            }
+        },
+        {
+            "name" : "mini_game",
+            "path" : "shj-mini",
+            "gitBranch" : "master",
+            "httpPath" : "/shj-mini/shj_client_git/bin/index.html",
+            "imageCompress" : {
+                "uiedit_compile_config" : "program_mini.laya",
+                "spine_scale" : "sync_res_sk_scale_mini.bat",
+                "ui_scale" : "run_ui_scale_mini.bat"
+            }
         }
     ]
 }

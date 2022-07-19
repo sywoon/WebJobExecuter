@@ -4,16 +4,7 @@ local Models = require "Models"
 local Define = require "Define"
 
 local CMD_TYPE = Define.CMD_TYPE
-local UPDATE_STATUS = {
-    NONE = 0,
-    PREPARE = 1,
-    EXPORT_EXCEL = 2,
-    EXPORT_PROTOL = 3,
-    EXPORT_UI = 4,
-    COMPILE_CLIENT = 5,
-    SYNC_ART_RES = 6,
-    ERROR = 100,
-}
+local UPDATE_STATUS = Define.UPDATE_STATUS
 
 local App = class("App")
 
