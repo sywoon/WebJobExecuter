@@ -56,6 +56,21 @@ class ProjConfig {
         }
         return null
     }
+
+    removeProjectGitVersion(projName) {
+        let filepath = this.rootPath + "/config/project_config_dynamic.json"
+        let data = fs.readFileSync(filepath, 'utf-8')
+        try {
+            data = JSON.parse(data)
+        } catch (e) {
+            data = {}
+            fs.writeFileSync(filepath, "{}")
+            return
+        }
+
+        delete data[projName]
+        fs.writeFileSync(filepath, JSON.stringify(data))
+    }
 }
 
 

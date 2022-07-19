@@ -68,7 +68,6 @@ class ProjectStatusVo {
 
     // "master":{"errMsg":"","status":0,"startTime":1647500026000,"lastUpdateTime":1647500075000}
     readConfig() {
-        console.log("==read update_dynamic_status.json")
         let plugin = this.mgr.plugin.getPlugin(PLUGIN_TYPE.FILE)
         let path = "./../config/update_dynamic_status.json"
         let content = plugin.readFileSync(path)
@@ -88,6 +87,8 @@ class ProjectStatusVo {
         let path = "./../config/update_dynamic_status.json"
         plugin.writeFileSync(path, data)
     }
+
+    
 }
 
 

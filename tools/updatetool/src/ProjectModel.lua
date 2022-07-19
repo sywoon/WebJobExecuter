@@ -29,9 +29,9 @@ function M:initConfig(packToolPath, projName, projPath, gitBranch, outConfigFile
     -- end
     -- self.projRootPath = projRootPath
 
-    local cfgDynamicPath = _F("%s/../../config/project_config_dynamic.lua", packToolPath)
+    local cfgDynamicPath = _F("%s/../../config/project_config_dynamic.json", packToolPath)
     if os.exist(cfgDynamicPath) then
-        local dataDynamic = io.readLuaFile(cfgDynamicPath, _U2A)
+        local dataDynamic = io.readJsonFile(cfgDynamicPath)
         if not dataDynamic then
             self.projConfigDyn = {}
             self:_saveProjConfigDynamic()
@@ -48,8 +48,8 @@ function M:_saveProjConfigDynamic()
         text = _A2U(text)
         return "return " .. text
     end
-    local cfgDynamicPath = _F("%s/../../config/project_config_dynamic.lua", self.packToolPath)
-    io.writeLuaFile(cfgDynamicPath, self.projConfigDyn, filter)
+    local cfgDynamicPath = _F("%s/../../config/project_config_dynamic.json", self.packToolPath)
+    io.writeJsonFile(cfgDynamicPath, self.projConfigDyn, filter)
 end
 
 function M:getGitBranch()

@@ -43,6 +43,7 @@ class JobProjectStatus extends JobBase {
 
         cfgStatus.status = Define.PROJECT_STATUS.NONE
         voProjStatus.setProjStatus(data.projName, cfgStatus)
+        this.logic.projConfig.removeProjectGitVersion(data.projName)
     }
 }
 
