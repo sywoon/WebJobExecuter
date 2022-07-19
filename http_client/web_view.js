@@ -19,7 +19,7 @@
             this.logic.on(EVT_LOGIC.PROJ_STATUS_UPDATE, this, this._onProjStatusUpdate)
 
             this.logic.updateVoData()
-            this.setStatusText("点错了，可通过刷新网页重置操作")
+            this.setStatusText("误操作，可通过刷新网页重置")
         }
 
         // {filename,content}
@@ -152,13 +152,20 @@
         
         _updateProjStatusText(projName, data) {
             // console.log("_updateProjStatusText", projName, data)
+            let cmdStr = ""
+            if (data.cmd == UPDATE_CMD_TYPE.UPDATE_CLIENT) {
+                cmdStr = "更新"
+            } else if (data.cmd == UPDATE_CMD_TYPE.SYNC_ART_RES) {
+                cmdStr = "同步"
+            }
+
             let timeMsg
             if (data.status == PROJECT_STATUS.NONE || data.status == PROJECT_STATUS.ERROR) {
                 let dateLast = new Date(Number(data.lastUpdateTime || data.startTime))
-                timeMsg = "结束时间: " + dateLast.toLocaleString()
+                timeMsg = cmdStr + "结束时间: " + dateLast.toLocaleString()
             } else {
                 let date = new Date(Number(data.startTime))
-                timeMsg = "开始时间: " + date.toLocaleString()
+                timeMsg = cmdStr + "开始时间: " + date.toLocaleString()
             }
 
             let str = ""
