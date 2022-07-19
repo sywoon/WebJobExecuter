@@ -18,11 +18,18 @@
             voProjStatus.updateData()
 
             let projName = result.data.projName
-            this.logic.on(EVT_LOGIC.PROJ_STATUS_UPDATE, this, ()=>{
+            let endCall = ()=>{
                 if (voProjStatus.isStatusDone(projName)) {
                     this.mgr.client.onCmdEnd(this.cmd)
+                    if (result.cmd == JOB_CODE.CMD_UPDATE_CLIENT) {
+                        console.log("项目更新结束:" + projName)
+                    } else if (result.cmd == JOB_CODE.CMD_SYNC_ART_RES) {
+                        console.log("资源同步结束:" + projName)
+                    }
+                    this.logic.off(EVT_LOGIC.PROJ_STATUS_UPDATE, this, endCall)
                 }
-            })
+            }
+            this.logic.on(EVT_LOGIC.PROJ_STATUS_UPDATE, this, endCall)
         }
     }
 

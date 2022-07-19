@@ -1,4 +1,5 @@
 (function (exports){
+    
     class HttpClient extends EventDispatcher {
         constructor(mgr) {
             super()
@@ -14,6 +15,12 @@
             this.inRequest = false
             this.xhr = new HttpRequest()
             this.xhr.setCallback(this._onHttpResponse.bind(this))
+        }
+
+        _log(...msgs) {
+            if (!this.mgr.isAdmin())
+                return
+            console.log(...msgs)
         }
     
         setDealDataCall(call) {
@@ -106,7 +113,7 @@
                 return
 
             this.inRequest = true
-            console.log("[[send http]]", data)
+            this._log("[[send http]]", data)
             this.xhr.send(this.urlServer, JSON.stringify(data), "post", "json")
 
             this.fire(EVT_HTTP_CLIENT.DATA_QUEUE_CHG, this.cmdQueue, this.cmdQueueASync)
@@ -116,16 +123,15 @@
         //result: {plugin_type:number, cmd:string|number, code:0, data:{...}, msg:""}
         _onHttpResponse(type, data) {
             this.inRequest = false
-
             if (type == "complete") {
-                console.log("[[onHttpResponse]]", data)
+                this._log("[[onHttpResponse]]", data)
                 if (data.error == -1) {
                     console.error(data.result.msg)
                 } else {
                     if (this.dealDataCall) {
                         this.dealDataCall(data.result)
                     } else {
-                        console.log("nobody deal data", data)
+                        this._log("nobody deal data", data)
                     }
                 }
             }

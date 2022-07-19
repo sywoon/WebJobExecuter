@@ -19,6 +19,7 @@
             this.logic.on(EVT_LOGIC.PROJ_STATUS_UPDATE, this, this._onProjStatusUpdate)
 
             this.logic.updateVoData()
+            this.setStatusText("点错了，可通过刷新网页重置操作")
         }
 
         // {filename,content}
@@ -54,9 +55,11 @@
         }
 
         _onServerBusy(data) {
-            console.log("服务器繁忙，自动刷新", data)
+            let str = "其他端在执行该工程，请稍后再试"
+            console.log(str, data)
+            this.setStatusText(str)
             //服务器在处理其他业务 重新刷新项目状态数据
-            this.addWaitCmd(data.cmd, data.data, data.data.projName)
+            // this.addWaitCmd(data.cmd, data.data, data.data.projName)
             this.logic.updateVoProjStatus()
         }
 
@@ -81,6 +84,8 @@
         }
 
         _onBtnUpdateProject(projName) {
+            this.setStatusText("")
+
             let key = Define.VO.DATA_PROJ_STATUS
             let voProjStatus = this.logic.getData(key)
             if (!voProjStatus.isStatusDone(projName) || this.isProjInLock(projName)) {
@@ -100,6 +105,8 @@
         }
 
         _onBtnSyncResource(projName) {
+            this.setStatusText("")
+            
             let key = Define.VO.DATA_PROJ_STATUS
             let voProjStatus = this.logic.getData(key)
             if (!voProjStatus.isStatusDone(projName) || this.isProjInLock(projName)) {
