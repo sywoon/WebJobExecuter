@@ -46,7 +46,6 @@
             } else {
                 this.setProjStatusAll(data.data)
             }
-            this.logic.fire(EVT_LOGIC.PROJ_STATUS_UPDATE, this)
 
             if (!this.isAllDone()) {
                 this.mgr.timer.once(Define.PROJ_STATUS_UPDATE_INTERVEL, this, this.updateData)
