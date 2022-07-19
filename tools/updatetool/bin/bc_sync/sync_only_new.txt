@@ -1,0 +1,9 @@
+log verbose append:"Log.txt"
+
+load %from% %to%
+expand all
+compare rules-based
+
+select left.diff.files
+copy left->right
+

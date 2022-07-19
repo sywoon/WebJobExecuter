@@ -53,11 +53,11 @@ class Timer {
         this._speed = this._speedLast
     }
 
-    once(delay, caller, method, coverBefore, args=null) {
+    once(delay, caller, method, coverBefore=true, args=null) {
         this._addCall(true, 1, delay, caller, method, coverBefore, args);
     }
 
-    loop(delay, caller, method, repeatTimes=0, coverBefore, args=null) {
+    loop(delay, caller, method, repeatTimes=0, coverBefore=true, args=null) {
         this._addCall(false, repeatTimes, delay, caller, method, coverBefore, args);
     }
 

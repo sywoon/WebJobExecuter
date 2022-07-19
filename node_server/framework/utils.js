@@ -9,6 +9,7 @@ class Utils {
 
     static fixPath(path, keepLast) {
         path = path.replace(/\\/g, "/")
+        path = path.replace(/\/\//g, "/")
         if (keepLast && path.charAt(path.length-1) != "/") {
             path = path + "/"
         }

@@ -7,11 +7,13 @@
             this.projStatusAll = {}
         }
 
+        //ERROR 也表示业务结束
         isStatusDone(projName) {
-            if (!this.projStatusAll[projName])  //没有数据 表示还未操作过
+            let status = this.projStatusAll[projName].status
+            if (!status)  //没有数据 表示还未操作过
                 return true
             
-            return this.projStatusAll[projName].status == PROJECT_STATUS.NONE
+            return status == PROJECT_STATUS.NONE || status == PROJECT_STATUS.ERROR
         }
 
         setStatus(projName, v) {
@@ -26,7 +28,7 @@
             let isDone = true
             for (let projName in this.projStatusAll) {
                 let cfg = this.projStatusAll[projName]
-                if (cfg.status != PROJECT_STATUS.NONE) {
+                if (cfg.status != PROJECT_STATUS.NONE && cfg.status != PROJECT_STATUS.ERROR) {
                     isDone = false
                     break
                 }

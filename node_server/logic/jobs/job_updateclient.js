@@ -27,18 +27,38 @@ class JobUpdateClient extends JobBase {
         voProjStatus.setProjStatus(projName, cfgStatus)
 
         result.data = {projName: projName}
+        this._runUpdateToolAsync(projName, cbk)
         
-        this.mgr.timer.once(3000, this, ()=>{
-            console.log("chg status 1=========")
-            cfgStatus.status = Define.PROJECT_STATUS.EXPORT_PROTOL
-            voProjStatus.setProjStatus(projName, cfgStatus)
-        })
+        // this.mgr.timer.once(3000, this, ()=>{
+        //     console.log("chg status 1=========")
+        //     cfgStatus.status = Define.PROJECT_STATUS.EXPORT_PROTOL
+        //     voProjStatus.setProjStatus(projName, cfgStatus)
+        // })
 
-        this.mgr.timer.once(6000, this, ()=>{
-            console.log("chg status 2=========")
-            cfgStatus.status = Define.PROJECT_STATUS.NONE
-            voProjStatus.setProjStatus(projName, cfgStatus)
-            cbk && cbk()
+        // this.mgr.timer.once(6000, this, ()=>{
+        //     console.log("chg status 2=========")
+        //     cfgStatus.status = Define.PROJECT_STATUS.NONE
+        //     voProjStatus.setProjStatus(projName, cfgStatus)
+        //     cbk && cbk()
+        // })
+    }
+
+    _runUpdateToolAsync(projName) {
+        console.log("_runUpdateToolAsync", projName)
+
+        let projConfig = this.logic.projConfig
+        let toolRootPath = projConfig.getToolRootPath()
+        let projPath = projConfig.getProjectPath(projName)
+        let projBranch = projConfig.getProjectBranch(projName)
+        let update_tool_cmd = "update_client_all.bat"
+        let cmd = `start cmd /C ${toolRootPath}/tools/${update_tool_cmd} ${projName} ${projPath} ${projBranch}`
+
+        let key = Define.VO.DATA_PROJ_STATUS
+        let voProjStatus = this.logic.getData(key)
+        voProjStatus.startReadConfig()  //工具中 通过修改文件 来同步执行进度
+
+        this.getPlugin().runBatCmd(cmd, ()=>{
+            voProjStatus.stopReadConfig()
         })
     }
 }

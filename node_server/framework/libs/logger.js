@@ -15,30 +15,30 @@ function setLogPath(path) {
 
 function any2str(msg) {
     if (typeof msg === "string") {
-        return msg;
+        return msg
     }
     else if (typeof msg === "object") {
         try {
-            msg = JSON.stringify(msg);
+            msg = JSON.stringify(msg)
         } catch (error) {
-            msg = String(msg);
+            msg = String(msg)
         }
-        return msg;
+        return msg
     } else {
-        return String(msg);
+        return String(msg)
     }
 }
 
 function args2str(...args) {
     let arr = [];
     for (var i = 0; i < args.length; i++) {
-        let msg = args[i];
-        msg = any2str(msg);
+        let msg = args[i]
+        msg = any2str(msg)
         arr.push(msg)
     }
 
-    let text = arr.join("\t");
-    return text;
+    let text = arr.join("\t")
+    return text
 }
 
 function log(...msgs) {
@@ -60,7 +60,7 @@ function error(...msgs) {
     fs.appendFileSync(logFile, msg, {encodeing:"binary"})
 }
 
-function logcmd(msgs) {
+function logcmd(...msgs) {
     let msg = args2str(...msgs)
     // msg = Utils.cmd2u(msg)
     log(msg)

@@ -15,17 +15,43 @@ class JobSyncArtRes extends JobBase {
 
         let key = Define.VO.DATA_PROJ_STATUS
         let voProjStatus = this.logic.getData(key)
-        let cfgStatus = voProjStatus.getProjStatus(projName)
+        if (!voProjStatus.isAllDone()) {
+            result.code = Define.CMD_ERROR.BUSY
+            result.data = data.data
+            return
+        }
 
+        let cfgStatus = voProjStatus.getProjStatus(projName)
         cfgStatus.status = Define.PROJECT_STATUS.SYNC_ART_RES
         voProjStatus.setProjStatus(projName, cfgStatus)
 
         result.data = {projName: projName}
-        this.mgr.timer.once(5000, this, ()=>{
-            console.log("chg status 3=========")
-            cfgStatus.status = Define.PROJECT_STATUS.NONE
-            voProjStatus.setProjStatus(projName, cfgStatus)
-            cbk && cbk()
+        this._runSyncResToolAsync(projName, cbk)
+
+        // this.mgr.timer.once(5000, this, ()=>{
+        //     console.log("chg status 3=========")
+        //     cfgStatus.status = Define.PROJECT_STATUS.NONE
+        //     voProjStatus.setProjStatus(projName, cfgStatus)
+        //     cbk && cbk()
+        // })
+    }
+
+    _runSyncResToolAsync(projName) {
+        console.log("_runSyncResToolAsync", projName)
+        
+        let projConfig = this.logic.projConfig
+        let toolRootPath = projConfig.getToolRootPath()
+        let projPath = projConfig.getProjectPath(projName)
+        let projBranch = projConfig.getProjectBranch(projName)
+        let sync_res_tool_cmd = "sync_res_from_uiedit.bat"
+        let cmd = `start cmd /C ${toolRootPath}/tools/${sync_res_tool_cmd} ${projName} ${projPath} ${projBranch}`
+
+        let key = Define.VO.DATA_PROJ_STATUS
+        let voProjStatus = this.logic.getData(key)
+        voProjStatus.startReadConfig()  //工具中 通过修改文件 来同步执行进度
+
+        this.getPlugin().runBatCmd(cmd, ()=>{
+            voProjStatus.stopReadConfig()
         })
     }
 }

@@ -1,0 +1,7 @@
+load %from% %to%
+expand all
+compare rules-based
+
+select left.diff.all left.orphan.all
+copy left->right
+

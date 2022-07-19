@@ -28,16 +28,16 @@ class PluginCmdExecuter extends PluginBase {
     }
 
     runBatCmd(cmd, cbk) {
+        logger.log(`\n---run cmd:${cmd}`)
         child_process.exec(cmd, {maxBuffer: 1024 * 1024 * 10, encoding:"binary"}, (error, stdout, stderr) => {
-            logger.log("\n---run cmd", cmd);
             if (error) {
-                let str = `批处理运行失败:${error}`;
-                logger.log(str);
+                let str = `批处理运行失败:${error}`
+                logger.error(str)
             } else {
-                logger.log("\n---cmd back");
-                logger.logcmd(`stdout ${stdout}`);
-                logger.logcmd(`stderr ${stderr}`);
-                logger.log("---cmd end");
+                logger.log("\n---cmd back\n")
+                stdout && logger.warn(`stdout ${stdout}\n`)
+                stderr && logger.warn(`stderr ${stderr}\n`)
+                logger.log("---cmd end")
             }
             cbk(error, stdout, stderr)
         });

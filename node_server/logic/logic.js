@@ -6,6 +6,7 @@ const JobSyncArtRes = require("./jobs/job_syncartres")
 const EventDispatcher = require("../framework/libs/event_dispatcher")
 const Define = require("./../define")
 const ProjectStatusVo = require("./vo/vo_projectstatus")
+const ProjConfig = require("./proj_config")
 
 
 let PLUGIN_TYPE = Define.PLUGIN_TYPE
@@ -30,6 +31,9 @@ class Logic extends EventDispatcher {
         super()
         this.mgr = mgr
         this.datas = {}
+
+        this.projConfig = new ProjConfig(mgr.rootPath)
+
         this._initVo()
     }
 

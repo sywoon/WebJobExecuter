@@ -16,15 +16,18 @@ class ProjectStatusVo {
 
     //没有数据 表示还未操作过
     isStatusDone(projName) {
-        let cfg = this.projStatusAll[projName] || {status:PROJECT_STATUS.NONE}
-        return cfg.status == PROJECT_STATUS.NONE
+        let status = this.projStatusAll[projName].status
+        if (!status)  //没有数据 表示还未操作过
+            return true
+        
+        return status == PROJECT_STATUS.NONE || status == PROJECT_STATUS.ERROR
     }
 
     isAllDone() {
         let isDone = true
         for (let projName in this.projStatusAll) {
             let cfg = this.projStatusAll[projName]
-            if (cfg.status != PROJECT_STATUS.NONE) {
+            if (cfg.status != PROJECT_STATUS.NONE && cfg.status != PROJECT_STATUS.ERROR) {
                 isDone = false
                 break
             }
@@ -36,9 +39,17 @@ class ProjectStatusVo {
         this.updateProjStatusFromFile()
     }
 
+    startReadConfig() {
+        this.mgr.timer.loop(5000, this, this.readConfig)
+    }
+
+    stopReadConfig() {
+        this.mgr.timer.clear(this, this.readConfig)
+        this.readConfig()
+    }
+
     updateProjStatusFromFile() {
-        let data = this.readConfig()
-        this.projStatusAll = data
+        this.readConfig()
     }
 
     getProjStatus(projName) {
@@ -57,6 +68,7 @@ class ProjectStatusVo {
 
     // "master":{"errMsg":"","status":0,"startTime":1647500026000,"lastUpdateTime":1647500075000}
     readConfig() {
+        console.log("==read update_dynamic_status.json")
         let plugin = this.mgr.plugin.getPlugin(PLUGIN_TYPE.FILE)
         let path = "./../config/update_dynamic_status.json"
         let content = plugin.readFileSync(path)
@@ -67,6 +79,7 @@ class ProjectStatusVo {
             data = {}
             plugin.writeFileSync(path, {})  //覆盖错误的内容
         }
+        this.projStatusAll = data
         return data
     }
 

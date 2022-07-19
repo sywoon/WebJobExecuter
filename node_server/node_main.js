@@ -17,6 +17,8 @@ function main(toolPath, rootPath) {
     let cfgServer = toolsConfig.getConfig("node_server")
 
     let mgr = new Mgr()
+    mgr.tooPath = toolPath
+    mgr.rootPath = rootPath
     mgr.initAll()
 
     let nodeSvr = new NodeServer()

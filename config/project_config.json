@@ -20,11 +20,7 @@
             "bin/libs/proto.js",
             "libs/proto.d.ts",
             "bin/res/error_msg.json"
-        ],
-        "nodeServer" : {
-            "ip" : "192.168.30.40",
-            "port" : 9001
-        }
+        ]
     },
     "projects" : [
         {

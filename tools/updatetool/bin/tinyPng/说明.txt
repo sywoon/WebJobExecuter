@@ -1,0 +1,7 @@
+.\tinyPng.bat 需要压缩的文件夹路径 导出路径
+
+
+
+ps2020:
+复制到ps的设置文件夹 PSUserConfig.txt
+C:\Users\Administrator\AppData\Roaming\Adobe\Adobe Photoshop 2020\Adobe Photoshop 2020 Settings

@@ -1,23 +1,23 @@
 return {
-  ["release"] = 
+  ["qpbt"] = 
   {
-    ["protol"] = "d0ac9292",
-    ["client"] = "9de723fd",
-    ["uiproj"] = "15936063",
-    ["excel"] = 38260,
+    ["uiproj"] = "ca8778c8",
+    ["excel"] = 41046,
+    ["client"] = "42c68dae",
+    ["protol"] = "0ad5c00f",
   },
   ["master"] = 
   {
-    ["excel"] = 39153,
-    ["client"] = "77b01959",
-    ["uiproj"] = "316e2956",
-    ["protol"] = "979dbc31",
+    ["uiproj"] = "d3cb8e54",
+    ["excel"] = 41046,
+    ["client"] = "2acce1ac",
+    ["protol"] = "71c06b85",
   },
-  ["qpbt"] = 
+  ["release"] = 
   {
-    ["protol"] = "7d8847d6",
-    ["client"] = "e9449324",
-    ["uiproj"] = "19cdeaaa",
-    ["excel"] = 39153,
+    ["uiproj"] = "a7ec24fa",
+    ["excel"] = 41046,
+    ["client"] = "8473b14d",
+    ["protol"] = "09251746",
   },
 }

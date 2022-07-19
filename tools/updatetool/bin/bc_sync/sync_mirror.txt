@@ -1,0 +1,6 @@
+log verbose append:"Log.txt"
+
+
+load %from% %to%
+sync create-empty mirror:left->right
+
