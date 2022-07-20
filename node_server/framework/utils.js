@@ -25,7 +25,7 @@ class Utils {
     static runCmd(cmd, cbk) {
         logger.log(`\n---run cmd:${cmd}`)
         child_process.exec(cmd, {maxBuffer: 1024 * 1024 * 10, encoding:"binary"}, (error, stdout, stderr) => {
-            console.log("--run cmd cbk")
+            logger.log("--run cmd cbk")
             if (error) {
                 let str = `批处理运行失败:${error}`
                 logger.error(str)
