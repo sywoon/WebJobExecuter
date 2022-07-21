@@ -9,19 +9,20 @@ export class ProjectStatusVo {
 
     //ERROR 也表示业务结束
     isStatusDone(projName) {
-        let status = this.projStatusAll[projName].status
-        if (!status)  //没有数据 表示还未操作过
+        let cfg = this.projStatusAll[projName]
+        if (!cfg)  //没有数据 表示还未操作过
             return true
         
-        return status == PROJECT_STATUS.NONE || status == PROJECT_STATUS.ERROR
+        return cfg.status == PROJECT_STATUS.NONE || cfg.status == PROJECT_STATUS.ERROR
     }
 
     setStatus(projName, v) {
-        if (!this.projStatusAll[projName]) {
+        let cfg = this.projStatusAll[projName]
+        if (!cfg) {
             this.projStatusAll[projName] = {status:v}
             return
         } 
-        this.projStatusAll[projName].status = v
+        cfg.status = v
     }
 
     isAllDone() {

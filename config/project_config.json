@@ -46,10 +46,32 @@
             }
         },
         {
-            "name" : "qpbt",
+            "name" : "release_lang",
+            "path" : "shj-release_lang",
+            "gitBranch" : "release_lang",
+            "httpPath" : "/shj-release_lang/shj_client_git/bin/index_debug.html",
+            "imageCompress" : {
+                "uiedit_config" : "program.laya",
+                "spine_scale" : "sync_res_sk_scale.bat",
+                "ui_scale" : "res_ui_scale.bat"
+            }
+        },
+        {
+            "name" : "qpbt1",
             "path" : "shj-qpbt1",
             "gitBranch" : "qpbt",
             "httpPath" : "/shj-qpbt1/shj_client_git/bin/index.html",
+            "imageCompress" : {
+                "uiedit_config" : "program.laya",
+                "spine_scale" : "sync_res_sk_scale.bat",
+                "ui_scale" : "res_ui_scale.bat"
+            }
+        },
+        {
+            "name" : "qpbt2",
+            "path" : "shj-qpbt2",
+            "gitBranch" : "qpbt2",
+            "httpPath" : "/shj-qpbt2/shj_client_git/bin/index.html",
             "imageCompress" : {
                 "uiedit_config" : "program.laya",
                 "spine_scale" : "sync_res_sk_scale.bat",

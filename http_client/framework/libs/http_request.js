@@ -7,6 +7,12 @@ export class HttpRequest {
         this.responseType = "text"
     }
 
+    setTimeout(v) {
+        if (!this.http)
+            return
+        this.http.timeout = v
+    }
+
     setCallback = function (cbk) {
         this.cbk = cbk
     }
