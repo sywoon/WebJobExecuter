@@ -1,6 +1,7 @@
-(function (exports) {
+import {Handler} from "./handler.js"
 
-class EventDispatcher {
+
+export class EventDispatcher {
     constructor() {
         this._events = {}
     }
@@ -110,7 +111,3 @@ class EventDispatcher {
     }
     
 }
-
-exports.EventDispatcher = EventDispatcher
-   
-})(window)

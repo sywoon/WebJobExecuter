@@ -1,79 +1,75 @@
+import {Define, JOB_CODE, EVT_LOGIC, PROJECT_STATUS} from "./../../define.js"
 
-(function (exports) {
-    class ProjectStatusVo {
-        constructor(logic) {
-            this.logic = logic
-            this.mgr = logic.mgr
-            this.projStatusAll = {}
-        }
+export class ProjectStatusVo {
+    constructor(logic) {
+        this.logic = logic
+        this.mgr = logic.mgr
+        this.projStatusAll = {}
+    }
 
-        //ERROR 也表示业务结束
-        isStatusDone(projName) {
-            let status = this.projStatusAll[projName].status
-            if (!status)  //没有数据 表示还未操作过
-                return true
-            
-            return status == PROJECT_STATUS.NONE || status == PROJECT_STATUS.ERROR
-        }
+    //ERROR 也表示业务结束
+    isStatusDone(projName) {
+        let status = this.projStatusAll[projName].status
+        if (!status)  //没有数据 表示还未操作过
+            return true
+        
+        return status == PROJECT_STATUS.NONE || status == PROJECT_STATUS.ERROR
+    }
 
-        setStatus(projName, v) {
-            if (!this.projStatusAll[projName]) {
-                this.projStatusAll[projName] = {status:v}
-                return
-            } 
-            this.projStatusAll[projName].status = v
-        }
+    setStatus(projName, v) {
+        if (!this.projStatusAll[projName]) {
+            this.projStatusAll[projName] = {status:v}
+            return
+        } 
+        this.projStatusAll[projName].status = v
+    }
 
-        isAllDone() {
-            let isDone = true
-            for (let projName in this.projStatusAll) {
-                let cfg = this.projStatusAll[projName]
-                if (cfg.status != PROJECT_STATUS.NONE && cfg.status != PROJECT_STATUS.ERROR) {
-                    isDone = false
-                    break
-                }
-            }
-            return isDone
-        }
-
-        updateData() {
-            this.logic.sendJobCmd(JOB_CODE.STATUS_PROJECT, {}, this._onProjStatusBack, this)
-        }
-
-        //data {projName:, data:{状态数据 某一个}}
-        //data {data:{状态数据 所有项目}}
-        _onProjStatusBack(data) {
-            if (data.projName) {
-                this.setProjStatus(data.projName, data.data)
-            } else {
-                this.setProjStatusAll(data.data)
-            }
-
-            if (!this.isAllDone()) {
-                this.mgr.timer.once(Define.PROJ_STATUS_UPDATE_INTERVEL, this, this.updateData)
+    isAllDone() {
+        let isDone = true
+        for (let projName in this.projStatusAll) {
+            let cfg = this.projStatusAll[projName]
+            if (cfg.status != PROJECT_STATUS.NONE && cfg.status != PROJECT_STATUS.ERROR) {
+                isDone = false
+                break
             }
         }
+        return isDone
+    }
 
-        // "master":{"errMsg":"","status":0,"startTime":1647500026000,"lastUpdateTime":1647500075000}
-        getProjStatus(projName) {
-            return this.projStatusAll[projName] || {}
+    updateData() {
+        this.logic.sendJobCmd(JOB_CODE.STATUS_PROJECT, {}, this._onProjStatusBack, this)
+    }
+
+    //data {projName:, data:{状态数据 某一个}}
+    //data {data:{状态数据 所有项目}}
+    _onProjStatusBack(data) {
+        if (data.projName) {
+            this.setProjStatus(data.projName, data.data)
+        } else {
+            this.setProjStatusAll(data.data)
         }
 
-        getProjStatusAll() {
-            return this.projStatusAll
-        }
-
-        setProjStatus(projName, data) {
-            this.projStatusAll[projName] = data
-            this.logic.fire(EVT_LOGIC.PROJ_STATUS_UPDATE, this)
-        }
-
-        setProjStatusAll(data) {
-            this.projStatusAll = data
-            this.logic.fire(EVT_LOGIC.PROJ_STATUS_UPDATE, this)
+        if (!this.isAllDone()) {
+            this.mgr.timer.once(Define.PROJ_STATUS_UPDATE_INTERVEL, this, this.updateData)
         }
     }
 
-    exports.ProjectStatusVo = ProjectStatusVo
+    // "master":{"errMsg":"","status":0,"startTime":1647500026000,"lastUpdateTime":1647500075000}
+    getProjStatus(projName) {
+        return this.projStatusAll[projName] || {}
+    }
 
-})(window)
+    getProjStatusAll() {
+        return this.projStatusAll
+    }
+
+    setProjStatus(projName, data) {
+        this.projStatusAll[projName] = data
+        this.logic.fire(EVT_LOGIC.PROJ_STATUS_UPDATE, this)
+    }
+
+    setProjStatusAll(data) {
+        this.projStatusAll = data
+        this.logic.fire(EVT_LOGIC.PROJ_STATUS_UPDATE, this)
+    }
+}

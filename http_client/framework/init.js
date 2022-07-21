@@ -1,11 +1,11 @@
-(function(exports) {
-    function InitFramework(cbk) {
-        let mgr = new Mgr()
-        let syncLoaded = new SyncLoaded(cbk, mgr)
+import {Mgr} from "./mgr.js"
+import {SyncLoaded} from "./libs/sync_loaded.js"
 
-        syncLoaded.addCheck("mgr")
-        mgr.initAll(syncLoaded.cbkListener.bind(syncLoaded, "mgr"))
-    }
+export function InitFramework(cbk) {
+    let mgr = new Mgr()
+    let syncLoaded = new SyncLoaded(cbk, mgr)
 
-    exports.InitFramework = InitFramework
-})(window)
+    syncLoaded.addCheck("mgr")
+    mgr.initAll(syncLoaded.cbkListener.bind(syncLoaded, "mgr"))
+}
+

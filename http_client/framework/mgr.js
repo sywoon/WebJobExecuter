@@ -1,45 +1,46 @@
-(function(exports){
-    class Mgr {
+import {Timer} from "./libs/timer.js"
+import {SyncLoaded} from "./libs/sync_loaded.js"
+import {ToolsConfig} from "./tools_config.js"
+import {PluginMgr} from "./plugin_mgr.js"
 
-        initAll(cbk) {
-            let timer = new Timer()
-            this.timer = timer
+export class Mgr {
 
-            let syncLoaded = new SyncLoaded(cbk)
+    initAll(cbk) {
+        let timer = new Timer()
+        this.timer = timer
 
-            syncLoaded.addCheck("toolsCfg")
-            this.toolsCfg = new ToolsConfig(syncLoaded.cbkListener.bind(syncLoaded, "toolsCfg"))
+        let syncLoaded = new SyncLoaded(cbk)
 
-            let pluginMgr = new PluginMgr()
-            pluginMgr.registerPlugins()
-            this.plugin = pluginMgr
+        syncLoaded.addCheck("toolsCfg")
+        this.toolsCfg = new ToolsConfig(syncLoaded.cbkListener.bind(syncLoaded, "toolsCfg"))
 
-            this.urlParams = this._parseUrlParams()
+        let pluginMgr = new PluginMgr()
+        pluginMgr.registerPlugins()
+        this.plugin = pluginMgr
 
-            setInterval(()=>{
-                this.timer.update()
-            }, 1000/30)
-        }
+        this.urlParams = this._parseUrlParams()
 
-        isAdmin() {
-            return this.urlParams["admin"] == "1"
-        }
-
-        _parseUrlParams() {
-            let searchHref = window.location.search.replace('?', '')
-            let params = searchHref.split('&')
-            let result = {}
-            for (let param of params) {
-                if (!param)  //empty string
-                    continue
-                let arr = param.split('=')
-                if (arr.length != 2)
-                    continue
-                result[arr[0]] = arr[1]
-            }
-            return result
-        }
+        setInterval(()=>{
+            this.timer.update()
+        }, 1000/30)
     }
 
-    exports.Mgr = Mgr
-})(window)
+    isAdmin() {
+        return this.urlParams["admin"] == "1"
+    }
+
+    _parseUrlParams() {
+        let searchHref = window.location.search.replace('?', '')
+        let params = searchHref.split('&')
+        let result = {}
+        for (let param of params) {
+            if (!param)  //empty string
+                continue
+            let arr = param.split('=')
+            if (arr.length != 2)
+                continue
+            result[arr[0]] = arr[1]
+        }
+        return result
+    }
+}
