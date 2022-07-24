@@ -18,6 +18,11 @@ end
 function FileSync:syncFolder(from, to, mode)
     from = os.fixPath(from, true)
     to = os.fixPath(to, true)
+    
+    if not os.exist(to) then
+        os.copydir(from, to)
+        return
+    end
 
     local start = os.time()
     printu("同步文件中...", from, to, mode)
