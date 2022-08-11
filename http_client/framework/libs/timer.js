@@ -1,8 +1,9 @@
 import {Handler} from "./../libs/handler.js"
 
 class TimerVo {
-    static _pool = []
+    //static _pool = []
     static create() {
+        TimerVo._pool = TimerVo._pool || {}
         if (TimerVo._pool.length > 0)
             return TimerVo._pool.pop()
         return new TimerVo()

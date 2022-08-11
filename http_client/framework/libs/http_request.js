@@ -13,11 +13,11 @@ export class HttpRequest {
         this.http.timeout = v
     }
 
-    setCallback = function (cbk) {
+    setCallback(cbk) {
         this.cbk = cbk
     }
 
-    send = function (url, data, method, responseType, headers) {
+    send(url, data, method, responseType, headers) {
         var http = this.http
         http.open(method, url, true)
     
@@ -56,23 +56,23 @@ export class HttpRequest {
         http.send( isJson ? JSON.stringify(data) : data)
     }
 
-    _onProgress = function (e) {
+    _onProgress(e) {
         debug && console.log("onProgress", e.loaded, e.total)
         this.cbk && this.cbk("onprogress", e.loaded, e.total)
     }
 
-    _onAbort = function (e) {
+    _onAbort(e) {
         debug && console.log("Request was aborted by user")
         this.cbk && this.cbk("onabort")
     }
 
-    _onError = function (e) {
+    _onError(e) {
         console.error("Request failed Status:" + this.http.status 
                 + " text:" + this.http.statusText)
         this.cbk && this.cbk("onerror")
     }
 
-    _onLoad = function () {
+    _onLoad() {
         var http = this.http;
         var status = http.status !== undefined ? http.status : 200
     
@@ -83,7 +83,7 @@ export class HttpRequest {
         }
     }
 
-    complete = function () {
+    complete() {
         var data;
         if (this.responseType === "json") {
             data = JSON.parse(this.http.responseText)

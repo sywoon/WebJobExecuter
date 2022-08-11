@@ -1,8 +1,9 @@
 
 export class Handler {
-    static _pool = []
+    //static _pool = []
 
     static create(caller, method, once, args=null) {
+        Handler._pool = Handler._pool || {}
         let handler
         if (Handler._pool.length > 0) {
             handler = Handler._pool.pop()
@@ -73,3 +74,5 @@ export class Handler {
         return rtn
     }
 }
+
+
