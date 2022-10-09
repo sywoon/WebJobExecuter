@@ -1,3 +1,9 @@
+//==================================
+//
+//   项目功能编译工具-Web端
+//   author:宋月文  2022.7.25
+//
+//==================================
 import {InitFramework} from "./framework/init.js"
 import {Logic} from "./logic/logic.js"
 import {HttpClient} from "./framework/http_client.js"

@@ -10,7 +10,7 @@ export class ProjectStatusVo {
     //ERROR 也表示业务结束
     isStatusDone(projName) {
         let cfg = this.projStatusAll[projName]
-        if (!cfg)  //没有数据 表示还未操作过
+        if (!cfg || cfg.status == undefined)  //没有数据 表示还未操作过
             return true
         
         return cfg.status == PROJECT_STATUS.NONE || cfg.status == PROJECT_STATUS.ERROR
@@ -29,6 +29,8 @@ export class ProjectStatusVo {
         let isDone = true
         for (let projName in this.projStatusAll) {
             let cfg = this.projStatusAll[projName]
+            if (cfg.status == undefined)
+                continue
             if (cfg.status != PROJECT_STATUS.NONE && cfg.status != PROJECT_STATUS.ERROR) {
                 isDone = false
                 break

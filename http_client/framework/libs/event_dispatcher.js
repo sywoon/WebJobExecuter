@@ -106,6 +106,9 @@ export class EventDispatcher {
         }
 
         if (count === arr.length) {
+            for (let event of arr) {
+                event && event.recycle()
+            }
             delete this._events[type]
         }
     }

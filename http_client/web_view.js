@@ -21,7 +21,7 @@ export class WebView {
         this.logic.on(EVT_LOGIC.PROJ_STATUS_UPDATE, this, this._onProjStatusUpdate)
 
         this.logic.updateVoData()
-        this.setStatusText("误操作，可通过刷新网页重置")
+        // this.setStatusText("误操作，可通过刷新网页重置")
     }
 
     // {filename,content}
